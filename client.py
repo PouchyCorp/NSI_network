@@ -4,35 +4,66 @@ import pygame as pg
 from random import randint
 
 print('starting')
-serveur = socket()
-serveur.connect( ('192.168.56.1', 16384) )
+server = socket()
+server.connect( ('127.0.0.1', 16384) )
 ############
 
-WIN = pg.display.set_mode((1000,1000))
+WIN = pg.display.set_mode((500,500))
+
+
+def draw():
+    WIN.fill('black')
+    
+
+class Player():
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.rect = (x,y,20,20)
+
+    def draw(self):
+        pg.draw.rect(WIN, "red", self.rect)
+
+    def move(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT]:
+            self.x -= 1
+        if keys[pg.K_RIGHT]:
+            self.x += 1
+        if keys[pg.K_DOWN]:
+            self.y -= 1
+        if keys[pg.K_UP]:
+            self.y += 1
+    def updateValues(self):
+        self.rect = (self.x,self.y,20,20)
+
+localPlayer = Player(50,50)
 
 run = True
-while run:
-    message = serveur.recv(1000)
+def mainLoop():
+    global run
+    global localPlayer
+    while run:
+        localPlayer.move()
 
-    keys = pg.key.get_pressed()
+        localPlayer.updateValues()
+        response = str((localPlayer.x,localPlayer.y))
+        server.send(response.encode())
 
-    reponse = "0"
-    rand = 0
-    if keys[pg.K_LEFT] or rand == 1:
-        reponse = "LEFT"
-    if keys[pg.K_RIGHT] or rand == 2:
-        reponse = "RIGHT"
-    if keys[pg.K_DOWN] or rand == 3:
-        reponse = "DOWN"
-    if keys[pg.K_UP] or rand == 4:
-        reponse = "UP"
+        serverMessage = server.recv(1000).decode()
+       # if serverMessage:
+       #     otherPlayer = Player()
 
-    serveur.send(reponse.encode())
-    
-    for event in pg.event.get():
-            if event.type == pg.QUIT:
-                run = False
-                break
 
-serveur.close()
+        draw()
+        localPlayer.draw()
+        pg.display.update()
+
+        for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    run = False
+                    return
+
+mainLoop()
+server.close()
 pg.quit()
