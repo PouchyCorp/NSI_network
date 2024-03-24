@@ -31,9 +31,9 @@ class Player():
         if keys[pg.K_RIGHT]:
             self.x += 1
         if keys[pg.K_DOWN]:
-            self.y -= 1
-        if keys[pg.K_UP]:
             self.y += 1
+        if keys[pg.K_UP]:
+            self.y -= 1
     def updateValues(self):
         self.rect = (self.x,self.y,20,20)
 
@@ -47,7 +47,7 @@ def mainLoop():
         localPlayer.move()
 
         localPlayer.updateValues()
-        response = str((localPlayer.x,localPlayer.y))
+        response = str("PlayerX:"+str(localPlayer.x)+"/"+"PlayerY:"+str(localPlayer.y))
         server.send(response.encode())
 
         serverMessage = server.recv(1000).decode()

@@ -12,10 +12,15 @@ def on_new_client(client,addr):
     clock = pg.time.Clock()
     while True:
         clock.tick(60)
-        clientMessage = c.recv(1000).decode()
-        print(clientMessage)
-
-        response = '0'
+        clientMessage = client.recv(1000).decode()
+        splittedMessage = clientMessage.split("/")
+        if clientMessage:
+            dic = {}
+            for i in splittedMessage:
+               uwu = i.split(':')
+               dic[uwu[0]] = int(uwu[1])
+            print(dic)
+            response = '0'
         client.send(response.encode())
     client.close()
 
@@ -26,6 +31,6 @@ while run:
     if sourceClient not in clientList:
         clientList.append((sourceClient, addrClient))
         print('connected clients :',clientList)
-        Thread(target=on_new_client,args=(sourceClient, addrClient))
+        Thread(target=on_new_client,args=(sourceClient, addrClient)).run()
 
 pg.quit()
