@@ -1,6 +1,6 @@
 from socket import socket
 import pygame as pg
-from threading import Thread
+import _thread
 
 print('starting...')
 server = socket()
@@ -31,6 +31,6 @@ while run:
     if sourceClient not in clientList:
         clientList.append((sourceClient, addrClient))
         print('connected clients :',clientList)
-        Thread(target=on_new_client,args=(sourceClient, addrClient)).run()
+        _thread.start_new_thread(on_new_client,(sourceClient, addrClient))
 
 pg.quit()
