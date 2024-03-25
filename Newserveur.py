@@ -1,36 +1,43 @@
 from socket import socket
 import pygame as pg
 import _thread
+import pickle
 
 print('starting...')
 server = socket()
 server.bind(('127.0.0.1', 16384))
 server.listen(5)
-clientList = []
+clientList = {}
+players = {}
+PlayerNum = 0
 
-def on_new_client(client,addr):
+def on_new_client(client,PlayerNum):
     clock = pg.time.Clock()
     while True:
         clock.tick(60)
-        clientMessage = client.recv(1000).decode()
-        splittedMessage = clientMessage.split("/")
-        if clientMessage:
-            dic = {}
-            for i in splittedMessage:
-               uwu = i.split(':')
-               dic[uwu[0]] = int(uwu[1])
-            print(dic)
-            response = '0'
+        data = pickle.loads(client.recv(2048))
+        if data:
+            players[PlayerNum] = data
+        else:
+            client.close()
+            return
+        
+        if PlayerNum == 0:
+            client.send(pickle.dumps(players[1]))
+        else:
+            client.send(pickle.dumps(players[2]))
+        
+        response = '0'
         client.send(response.encode())
-    client.close()
 
 
 run = True
 while run:
     (sourceClient, addrClient) = server.accept()
     if sourceClient not in clientList:
-        clientList.append((sourceClient, addrClient))
+        clientList[sourceClient] = addrClient
         print('connected clients :',clientList)
-        _thread.start_new_thread(on_new_client,(sourceClient, addrClient))
+        _thread.start_new_thread(on_new_client,(sourceClient, PlayerNum))
+        PlayerNum+=1
 
 pg.quit()

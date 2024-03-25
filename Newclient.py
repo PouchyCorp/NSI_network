@@ -2,6 +2,7 @@ from socket import socket
 from time import sleep
 import pygame as pg
 from random import randint
+import pickle
 
 print('starting')
 server = socket()
@@ -47,10 +48,10 @@ def mainLoop():
         localPlayer.move()
 
         localPlayer.updateValues()
-        response = str("PlayerX:"+str(localPlayer.x)+"/"+"PlayerY:"+str(localPlayer.y))
-        server.send(response.encode())
+        server.send(pickle.dumps(localPlayer))
 
-        serverMessage = server.recv(1000).decode()
+        player2 = pickle.loads(server.recv(2048))
+        
        # if serverMessage:
        #     otherPlayer = Player()
 
