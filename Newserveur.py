@@ -2,8 +2,9 @@ from socket import socket
 import pygame as pg
 import _thread
 import pickle
+from player import Player
 
-print('starting...')
+print('waiting for client connections')
 server = socket()
 server.bind(('127.0.0.1', 16384))
 server.listen(5)
@@ -13,22 +14,24 @@ PlayerNum = 0
 
 def on_new_client(client,PlayerNum):
     clock = pg.time.Clock()
+    client.send(pickle.dumps(Player(50, 50)))
     while True:
         clock.tick(60)
-        data = pickle.loads(client.recv(2048))
-        if data:
-            players[PlayerNum] = data
+        msg = client.recv(20480)
+        if msg:
+            data = pickle.loads(msg)
+            players[PlayerNum] = msg
         else:
             client.close()
             return
-        
-        if PlayerNum == 0:
-            client.send(pickle.dumps(players[1]))
-        else:
-            client.send(pickle.dumps(players[2]))
-        
-        response = '0'
-        client.send(response.encode())
+        if len(players) > 1:
+            if PlayerNum == 0:
+                client.send(players[1])
+            else:
+                client.send(players[0])
+            
+        #response = ''
+        #client.send(response.encode())
 
 
 run = True

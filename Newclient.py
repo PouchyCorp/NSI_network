@@ -3,61 +3,33 @@ from time import sleep
 import pygame as pg
 from random import randint
 import pickle
+from player import Player
 
-print('starting')
+print('trying to connect to server')
 server = socket()
 server.connect( ('127.0.0.1', 16384) )
 ############
 
 WIN = pg.display.set_mode((500,500))
 
-
-def draw():
-    WIN.fill('black')
-    
-
-class Player():
-    def __init__(self,x,y):
-        self.x = x
-        self.y = y
-        self.rect = (x,y,20,20)
-
-    def draw(self):
-        pg.draw.rect(WIN, "red", self.rect)
-
-    def move(self):
-        keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT]:
-            self.x -= 1
-        if keys[pg.K_RIGHT]:
-            self.x += 1
-        if keys[pg.K_DOWN]:
-            self.y += 1
-        if keys[pg.K_UP]:
-            self.y -= 1
-    def updateValues(self):
-        self.rect = (self.x,self.y,20,20)
-
-localPlayer = Player(50,50)
-
 run = True
 def mainLoop():
     global run
-    global localPlayer
+    localPlayer = pickle.loads(server.recv(2048))
     while run:
         localPlayer.move()
-
         localPlayer.updateValues()
         server.send(pickle.dumps(localPlayer))
 
-        player2 = pickle.loads(server.recv(2048))
+        player2 : Player = pickle.loads(server.recv(2048))
         
        # if serverMessage:
        #     otherPlayer = Player()
 
 
-        draw()
-        localPlayer.draw()
+        WIN.fill('black')
+        pg.draw.rect(WIN, "blue", localPlayer.rect)
+        pg.draw.rect(WIN, "red", player2.rect)
         pg.display.update()
 
         for event in pg.event.get():
