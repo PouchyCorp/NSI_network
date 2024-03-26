@@ -1,8 +1,9 @@
 import pygame as pg
 class Player():
-    def __init__(self,x,y):
+    def __init__(self,x,y,num):
         self.x = x
         self.y = y
+        self.num = num
         self.rect = (x,y,20,20)
 
     def move(self):

@@ -8,20 +8,32 @@ from player import Player
 print('trying to connect to server')
 server = socket()
 server.connect( ('127.0.0.1', 16384) )
-############
+print('connected')
 
 WIN = pg.display.set_mode((500,500))
+
+OtherPlayers : dict[int, Player] = {}
 
 run = True
 def mainLoop():
     global run
-    localPlayer = pickle.loads(server.recv(2048))
+    localPlayer : Player = pickle.loads(server.recv(2048))
     while run:
         localPlayer.move()
         localPlayer.updateValues()
-        server.send(pickle.dumps(localPlayer))
 
-        player2 : Player = pickle.loads(server.recv(2048))
+        server.send(pickle.dumps(localPlayer))
+        print('player sent to server')
+
+        msg = server.recv(20480)
+        print(msg)
+        if msg != b'0':
+            player : Player = pickle.loads(msg)
+            OtherPlayers[player.num] = player
+            print('players recieved from server')
+        else : 
+            print('no other player from server')
+        
         
        # if serverMessage:
        #     otherPlayer = Player()
@@ -29,7 +41,8 @@ def mainLoop():
 
         WIN.fill('black')
         pg.draw.rect(WIN, "blue", localPlayer.rect)
-        pg.draw.rect(WIN, "red", player2.rect)
+        for player in OtherPlayers.values():
+            pg.draw.rect(WIN, "red", player.rect)
         pg.display.update()
 
         for event in pg.event.get():
