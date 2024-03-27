@@ -37,7 +37,8 @@ while running :
             elif clic == 2 :
                 x2,y2 = event.pos
                 clic = 1
-                rects.append(wall(x1,y1,x2,y2))
+                if wall(x1,y1,x2,y2):
+                    rects.append(wall(x1,y1,x2,y2))
             
             
     pygame.display.update()
