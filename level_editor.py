@@ -19,7 +19,7 @@ def draw():
 
 running = True
 
-clic = 1
+clicked = False
 xy_1, xy_2 = (), ()
     
 while running :
@@ -31,14 +31,13 @@ while running :
         if event.type == pygame.MOUSEBUTTONDOWN:
             button_type = event.button
 
-            if clic == 1 :
+            if clicked == False :
                 x1,y1 = event.pos
-                clic = 2
-            elif clic == 2 :
+                clicked = True
+            elif clicked == True :
                 x2,y2 = event.pos
-                clic = 1
-                if wall(x1,y1,x2,y2):
-                    rects.append(wall(x1,y1,x2,y2))
+                clicked = False
+                rects.append(wall(x1,y1,x2,y2))
             
             
     pygame.display.update()
