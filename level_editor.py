@@ -24,9 +24,7 @@ def draw():
     pygame.display.update()
 
 running = True
-
 clicked = False
-xy_1, xy_2 = (), ()
     
 while running :
     draw()
