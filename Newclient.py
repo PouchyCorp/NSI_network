@@ -27,7 +27,7 @@ def mainLoop():
 
         msg = server.recv(20480)
         if msg != b'0':
-            data : dict[int:Player] = pickle.loads(msg)
+            data : dict[int,Player] = pickle.loads(msg)
             print(data)
             for player in data.values():
                 print(player)
