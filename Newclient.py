@@ -26,10 +26,12 @@ def mainLoop():
         print('player sent to server')
 
         msg = server.recv(20480)
-        print(msg)
         if msg != b'0':
-            player : Player = pickle.loads(msg)
-            OtherPlayers[player.num] = player
+            data : dict[int:Player] = pickle.loads(msg)
+            print(data)
+            for player in data.values():
+                print(player)
+                OtherPlayers[player.num] = player
             print('players recieved from server')
         else : 
             print('no other player from server')

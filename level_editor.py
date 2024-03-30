@@ -11,6 +11,7 @@ def wall(x1,y1,x2,y2):
     if x2 > x1 and y2 > y1:
         return pygame.Rect(x1,y1,(x2-x1),(y2-y1))
     
+    
 def draw():
     WIN.blit(grid,WIN.get_rect())
     for rect in rects:

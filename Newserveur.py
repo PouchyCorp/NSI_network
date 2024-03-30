@@ -32,9 +32,8 @@ def on_new_client(client,PlayerNum : int):
         del playersWithoutSelf[PlayerNum]
 
         if playersWithoutSelf:
-            for otherPlayerNum in playersWithoutSelf.keys():
-                client.send(pickle.dumps(players[otherPlayerNum]))
-                print('player from',otherPlayerNum,' sent to',PlayerNum)
+            client.send(pickle.dumps(playersWithoutSelf))
+            print('player from sent to',PlayerNum)
         else:
             client.send(b'0')
             print('sending blank to',PlayerNum)
