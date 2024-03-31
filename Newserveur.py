@@ -10,33 +10,37 @@ server.bind(('127.0.0.1', 16384))
 server.listen(5)
 clientList = {}
 players : dict[int, Player] = {}
-PlayerNum = 0
+playerNum = 0
+debugMode = False
 
-def on_new_client(client,PlayerNum : int):
+def on_new_client(client,playerNum : int):
     clock = pg.time.Clock()
-    players[PlayerNum] = Player(50, 50, PlayerNum)
-    client.send(pickle.dumps(players[PlayerNum]))
+    print(playerNum,'connected')
+    players[playerNum] = Player(50, 50, playerNum)
+    client.send(pickle.dumps(players[playerNum]))
     while True:
         clock.tick(60)
 
         data = client.recv(1000)
-        print('data from',PlayerNum,' recieved by server')
+        if debugMode:print('data from',playerNum,' recieved by server') 
 
         if data:
-            players[PlayerNum] = pickle.loads(data)
+            players[playerNum] = pickle.loads(data)
         else:
+            print(playerNum,' disconnected')
+            del players[playerNum]
             client.close()
             return
         
         playersWithoutSelf : dict[int, Player] = players.copy()
-        del playersWithoutSelf[PlayerNum]
+        del playersWithoutSelf[playerNum]
 
         if playersWithoutSelf:
             client.send(pickle.dumps(playersWithoutSelf))
-            print('player from sent to',PlayerNum)
+            if debugMode:print('player from sent to',playerNum)
         else:
             client.send(b'0')
-            print('sending blank to',PlayerNum)
+            if debugMode:print('sending blank to',playerNum)
         
 
 
@@ -45,8 +49,7 @@ while run:
     (sourceClient, addrClient) = server.accept()
     if sourceClient not in clientList:
         clientList[sourceClient] = addrClient
-        print('connected clients :',PlayerNum)
-        _thread.start_new_thread(on_new_client,(sourceClient, PlayerNum))
-        PlayerNum+=1
+        _thread.start_new_thread(on_new_client,(sourceClient, playerNum))
+        playerNum+=1
 
 pg.quit()

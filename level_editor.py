@@ -64,9 +64,8 @@ while running :
                 ghostSurface.set_alpha(128)
                 ghostSurface.fill('blue')
             except:
+                print('owo')
                 pass
-            
-        print(p.mouse.get_pos())
         
         draw()
 

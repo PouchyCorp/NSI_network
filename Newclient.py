@@ -1,6 +1,6 @@
 from socket import socket
 from time import sleep
-import pygame as pg
+import pygame as p
 from random import randint
 import pickle
 from player import Player
@@ -10,31 +10,36 @@ server = socket()
 server.connect( ('127.0.0.1', 16384) )
 print('connected')
 
-WIN = pg.display.set_mode((500,500))
+p.init()
+WIN = p.display.set_mode((500,500))
 
 OtherPlayers : dict[int, Player] = {}
+debugMode = True
 
 run = True
 def mainLoop():
     global run
+    global OtherPlayers
     localPlayer : Player = pickle.loads(server.recv(2048))
     while run:
         localPlayer.move()
         localPlayer.updateValues()
 
         server.send(pickle.dumps(localPlayer))
-        print('player sent to server')
+        if debugMode:print('player sent to server')
 
-        msg = server.recv(20480)
+        msg = server.recv(2048)        
+        OtherPlayers = {}
         if msg != b'0':
             data : dict[int,Player] = pickle.loads(msg)
-            print(data)
+            if debugMode:print(data)
             for player in data.values():
-                print(player)
                 OtherPlayers[player.num] = player
-            print('players recieved from server')
+            if debugMode:print('players recieved from server')
         else : 
-            print('no other player from server')
+            if debugMode:print('no other player from server')
+
+        if debugMode:print(len(OtherPlayers))
         
         
        # if serverMessage:
@@ -42,16 +47,16 @@ def mainLoop():
 
 
         WIN.fill('black')
-        pg.draw.rect(WIN, "blue", localPlayer.rect)
+        p.draw.rect(WIN, "blue", localPlayer.rect)
         for player in OtherPlayers.values():
-            pg.draw.rect(WIN, "red", player.rect)
-        pg.display.update()
+            p.draw.rect(WIN, "red", player.rect)
+        p.display.update()
 
-        for event in pg.event.get():
-                if event.type == pg.QUIT:
+        for event in p.event.get():
+                if event.type == p.QUIT:
                     run = False
                     return
 
 mainLoop()
 server.close()
-pg.quit()
+p.quit()
