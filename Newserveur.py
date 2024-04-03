@@ -3,6 +3,7 @@ import pygame as pg
 import _thread
 import pickle
 from player import Player
+from bullet import Bullet
 
 print('waiting for client connections')
 server = socket()

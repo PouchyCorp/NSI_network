@@ -14,14 +14,25 @@ p.init()
 WIN = p.display.set_mode((500,500))
 
 OtherPlayers : dict[int, Player] = {}
-debugMode = True
 
+debugMode = False
 run = True
 def mainLoop():
     global run
     global OtherPlayers
+
+    attackSpeed = 0.5
+    attackSpeedTimer = 1
     localPlayer : Player = pickle.loads(server.recv(2048))
     while run:
+
+        attackSpeedTimer += attackSpeed/60
+        if attackSpeedTimer >= 1:
+            localPlayer.shoot()
+
+        for bullet in localPlayer.shootedBullets:
+            bullet.updateValues()
+            bullet.move()
         localPlayer.move()
         localPlayer.updateValues()
 
@@ -50,6 +61,9 @@ def mainLoop():
         p.draw.rect(WIN, "blue", localPlayer.rect)
         for player in OtherPlayers.values():
             p.draw.rect(WIN, "red", player.rect)
+        for bullet in localPlayer.shootedBullets:
+            p.draw.rect(WIN,'green',bullet.rect)
+        p.draw.line(WIN,'blue',localPlayer.pos, p.mouse.get_pos())
         p.display.update()
 
         for event in p.event.get():
