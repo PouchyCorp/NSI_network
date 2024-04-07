@@ -28,6 +28,9 @@ class Player():
         self.rect = (self.x,self.y,self.w,self.h)
         self.mouseDir = p.math.Vector2(p.mouse.get_pos()[0]- self.x,
                                         p.mouse.get_pos()[1] - self.y)
+        if self.mouseDir == p.Vector2(0,0):
+            print('u tried lol')
+            self.mouseDir = p.Vector2(0,-1)
         self.mouseDir.scale_to_length(20)
         
     
