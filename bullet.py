@@ -11,7 +11,8 @@ class Bullet():
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         
     def updateValues(self):
-        self.pos = (self.x,self.y)
+        self.x, self.y = (self.rect.x,self.rect.y)
+        self.pos = (self.rect.x,self.rect.y)
 
     def move(self):
         p.Rect.move_ip(self.rect,self.dir[0],self.dir[1])

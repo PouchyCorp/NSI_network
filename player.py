@@ -22,15 +22,12 @@ class Player():
             self.y += 3
         if keys[p.K_UP]:
             self.y -= 3
-    
-    def shoot(self):
-        self.shootedBullets.append(Bullet(self.x,self.y,self.mouseDir))
 
     def updateValues(self):
         self.pos = (self.x,self.y)
         self.rect = (self.x,self.y,self.w,self.h)
-        self.mouseDir = p.math.Vector2(self.x - p.mouse.get_pos()[0],
-                                         self.y - p.mouse.get_pos()[1])
+        self.mouseDir = p.math.Vector2(p.mouse.get_pos()[0]- self.x,
+                                        p.mouse.get_pos()[1] - self.y)
         self.mouseDir.scale_to_length(20)
         
     
