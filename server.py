@@ -8,18 +8,20 @@ from time import sleep
 
 try:
     MapName = 'Maps\\'+str(argv[1])+'.pkl'
+    with open(MapName,'rb') as map:
+        unpickledMap = pickle.load(map)
     print('loading '+str(argv[1])+' as map')
 except:
     MapName = 'Maps\\DO_NOT_DELETE.pkl'
     print('loading blank map')
+    with open(MapName,'rb') as map:
+        unpickledMap = pickle.load(map)
 
-with open(MapName,'rb') as map:
-    unpickledMap = pickle.load(map)
 
 def main():
     print('waiting for client connections')
     server = socket()
-    server.bind(('127.0.0.1', 16384))
+    server.bind(('192.168.1.100', 12345))
     server.listen(5)
     clientList = {}
     players : dict[int, Player] = {}
