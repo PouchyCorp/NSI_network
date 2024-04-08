@@ -21,8 +21,10 @@ WIN = p.display.set_mode((1080,1080))
 debugMode = False
 run = True
 
-def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos):
+def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
     WIN.fill('black')
+    for wall in map:
+        p.draw.rect(WIN, "red", wall)
     p.draw.rect(WIN, "blue", localPlayer.rect)
     for player in OtherPlayers:
         p.draw.rect(WIN, "red", player.rect)
@@ -39,7 +41,10 @@ def mainLoop():
 
     attackSpeed = 1
     attackSpeedTimer = 1
+    map : list = pickle.loads(server.recv(2048))
+    print('map loaded')
     localPlayer : Player = pickle.loads(server.recv(2048))
+    print('player loaded')
     localBullets : list[Bullet] = []
     otherBulletsPos : list[tuple] = []
     while run:
@@ -86,7 +91,7 @@ def mainLoop():
         if debugMode:print(len(OtherPlayers))
         
 
-        draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos)
+        draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map)
 
         for event in p.event.get():
                 if event.type == p.QUIT:
