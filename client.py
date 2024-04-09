@@ -4,6 +4,8 @@ import pygame as p
 import pickle
 from player import Player
 from bullet import Bullet 
+from time import time
+
 try:
     IP = str(sys.argv[1])
     PORT = int(sys.argv[2])
@@ -40,7 +42,6 @@ def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
         p.draw.rect(WIN,'green',p.Rect(bulletPos[0],bulletPos[1],10,10))
     renderText(str(localPlayer.hp),'red',(0,0))
     p.draw.line(WIN,'blue',localPlayer.pos, p.mouse.get_pos())
-    p.display.update()
 
 def mainLoop():
     global run
@@ -55,6 +56,7 @@ def mainLoop():
     localBullets : list[Bullet] = []
     otherBulletsPos : list[tuple] = []
     while run:
+        timerStart = time()
         #local player updates
         localPlayer.dir = localPlayer.recordInputDir()
         localPlayer.move(localPlayer.dir,map)
@@ -81,7 +83,7 @@ def mainLoop():
         if debugMode:print('data sent to server')
 
         #recieve data
-        freshData = server.recv(2048)        
+        freshData = server.recv(4056)        
         OtherPlayers : list[Player] = []
         #check if blank message sign
         if freshData != b'0':
@@ -105,6 +107,11 @@ def mainLoop():
                 if event.type == p.QUIT:
                     run = False
                     return
+        timerEnd = time()
+        timerFluctuation = round((timerEnd-timerStart)/(1/60),2)
+        renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,100))
+        
+        p.display.update()
 
 mainLoop()
 server.close()
