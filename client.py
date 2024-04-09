@@ -9,7 +9,7 @@ try:
     PORT = int(sys.argv[2])
 except:
     IP = '127.0.0.1'
-    PORT = 16384
+    PORT = 12345
 
 print('trying to connect to server')
 server = socket()
@@ -18,8 +18,14 @@ print('connected')
 
 p.init()
 WIN = p.display.set_mode((1080,1080))
+clock = p.time.Clock()
 debugMode = False
 run = True
+
+def renderText(what, color, pos):
+    font = p.font.Font('Minecraft.ttf', 30)
+    text = font.render(what, True, p.Color(color))
+    WIN.blit(text, pos)
 
 def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
     WIN.fill('black')
@@ -32,6 +38,7 @@ def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
         p.draw.rect(WIN,'green',bullet.rect)
     for bulletPos in otherBulletsPos:
         p.draw.rect(WIN,'green',p.Rect(bulletPos[0],bulletPos[1],10,10))
+    renderText(str(localPlayer.hp),'red',(0,0))
     p.draw.line(WIN,'blue',localPlayer.pos, p.mouse.get_pos())
     p.display.update()
 
@@ -49,7 +56,8 @@ def mainLoop():
     otherBulletsPos : list[tuple] = []
     while run:
         #local player updates
-        localPlayer.move()
+        localPlayer.dir = localPlayer.recordInputDir()
+        localPlayer.move(localPlayer.dir,map)
         localPlayer.updateValues()
 
         #attack speed logic

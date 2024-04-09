@@ -85,7 +85,7 @@ master = tk.Tk()
 tk.Label(master, 
          text="Map name").grid(row=0)
 tk.Label(master, 
-         text="close editor to sauve",fg='red').grid(row=2)
+         text="close editor to save",fg='red').grid(row=2)
 
 
 e1 = tk.Entry(master)

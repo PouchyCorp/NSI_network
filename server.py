@@ -7,10 +7,15 @@ from player import Player
 from time import sleep
 
 try:
-    MapName = 'Maps\\'+str(argv[1])+'.pkl'
+    if False:
+        MapName = 'Maps\\'+str(argv[1])+'.pkl'
+    else:
+        #override for tests
+        MapName = 'Maps\\choupchoup.pkl'
+        
     with open(MapName,'rb') as map:
         unpickledMap = pickle.load(map)
-    print('loading '+str(argv[1])+' as map')
+    print('loading '+MapName+' as map')
 except:
     MapName = 'Maps\\DO_NOT_DELETE.pkl'
     print('loading blank map')
@@ -21,7 +26,7 @@ except:
 def main():
     print('waiting for client connections')
     server = socket()
-    server.bind(('192.168.1.100', 12345))
+    server.bind(('127.0.0.1', 12345))
     server.listen(5)
     clientList = {}
     players : dict[int, Player] = {}
