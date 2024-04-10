@@ -10,7 +10,7 @@ class Player():
         self.hp = 10
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.dir : p.Vector2 = p.Vector2(0,0)
-        self.speed = 5
+        self.speed = 20
         self.mouseDir = p.Vector2(0,0)
         self.pos = (self.x,self.y)
         self.shootedBullets : list[Bullet] = []
@@ -28,7 +28,7 @@ class Player():
             vector += (0,-self.speed)
         return vector
 
-    def move(self,dir : p.Vector2,colliders):
+    def move(self,dir : p.Vector2,colliders : list[p.Rect]):
         if dir != p.Vector2(0,0):
             shadowRect = self.rect.copy()
             shadowRect.move_ip(dir)
@@ -63,7 +63,7 @@ class Player():
         if self.mouseDir == p.Vector2(0,0):
             print('u tried lol')
             self.mouseDir = p.Vector2(0,-1)
-        self.mouseDir.scale_to_length(20)
+        self.mouseDir.scale_to_length(self.speed)
         #
 
         

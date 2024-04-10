@@ -14,5 +14,15 @@ class Bullet():
         self.x, self.y = (self.rect.x,self.rect.y)
         self.pos = (self.rect.x,self.rect.y)
 
-    def move(self):
-        p.Rect.move_ip(self.rect,self.dir[0],self.dir[1])
+    def move(self, colliders : list[p.Rect]):
+        shadowRect = self.rect.copy()
+        shadowRect.move_ip(self.dir)
+        if shadowRect.collidelistall(colliders):
+            collider = colliders[shadowRect.collidelist(colliders)]
+            #print(collider.top, self.rect.centery, collider.bottom )
+            if collider.top < self.rect.centery < collider.bottom:
+                self.dir.x *= -1
+            else:
+                self.dir.y *= -1
+        p.Rect.move_ip(self.rect,self.dir)
+            

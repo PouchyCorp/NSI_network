@@ -32,7 +32,7 @@ def renderText(what, color, pos):
 def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
     WIN.fill('black')
     for wall in map:
-        p.draw.rect(WIN, "red", wall)
+        p.draw.rect(WIN, wall['color'], wall['rect'])
     p.draw.rect(WIN, "blue", localPlayer.rect)
     for player in OtherPlayers:
         p.draw.rect(WIN, "red", player.rect)
@@ -50,6 +50,7 @@ def mainLoop():
     attackSpeed = 1
     attackSpeedTimer = 1
     map : list = pickle.loads(server.recv(2048))
+    mapColliders = [wall['rect'] for wall in map]
     print('map loaded')
     localPlayer : Player = pickle.loads(server.recv(2048))
     print('player loaded')
@@ -59,7 +60,7 @@ def mainLoop():
         timerStart = time()
         #local player updates
         localPlayer.dir = localPlayer.recordInputDir()
-        localPlayer.move(localPlayer.dir,map)
+        localPlayer.move(localPlayer.dir,mapColliders)
         localPlayer.updateValues()
 
         #attack speed logic
@@ -70,7 +71,7 @@ def mainLoop():
 
         #local bullet updates
         for bullet in localBullets:
-            bullet.move()
+            bullet.move(mapColliders)
             bullet.updateValues()
         localBulletsPos : list[tuple] = [bullet.pos for bullet in localBullets]
 

@@ -2,12 +2,12 @@ import pygame as p
 import tkinter as tk
 import pickle 
 
-rects = []
+walls = []
 
 def save():
     fileName = e1.get()
     with open("Maps\\"+fileName+'.pkl','wb') as file:
-        pickle.dump(rects,file)
+        pickle.dump(walls,file)
 
 def main():
     p.init()
@@ -43,8 +43,8 @@ def main():
         
     def draw():
         WIN.blit(grid,(0,0))
-        for rect in rects:
-            p.draw.rect(WIN,rect["color"],rect["wall"])
+        for wall in walls:
+            p.draw.rect(WIN,wall["color"],wall["rect"])
         p.display.update()
         if clicked:
             WIN.blit(ghostSurface,ghostSurfacePos)
@@ -71,7 +71,7 @@ def main():
                     x2,y2 = event.pos
                     clicked = False
                     if wall(x1,y1,x2,y2):
-                        rects.append({"wall" : wall(x1,y1,x2,y2), "color" : color})
+                        walls.append({"rect" : wall(x1,y1,x2,y2), "color" : color})
 
                 if button_type == 1:
                     color, color_fill = "red", "red"
