@@ -6,7 +6,7 @@ walls = []
 
 def save():
     fileName = e1.get()
-    with open("Maps\\"+fileName+'.pkl','wb') as file:
+    with open("Maps/"+fileName+'.pkl','wb') as file:
         pickle.dump(walls,file)
 
 def snap(coor,r):
@@ -22,7 +22,7 @@ def main():
 
     WIN = p.display.set_mode((1000, 1000))
     p.display.set_caption("TAGLIATELE Level Editor")
-    grid = p.image.load('background.jpg')
+    grid = p.image.load('assets/background.jpg')
 
     def wall(x1,y1,x2,y2):
         try:
@@ -104,7 +104,7 @@ master = tk.Tk()
 tk.Label(master, 
          text="Map name").grid(row=0)
 tk.Label(master, 
-         text="close editor to sauve",fg='red').grid(row=2)
+         text="close editor to save",fg='red').grid(row=2)
 
 
 e1 = tk.Entry(master)

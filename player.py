@@ -10,7 +10,7 @@ class Player():
         self.hp = 10
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.dir : p.Vector2 = p.Vector2(0,0)
-        self.speed = 20
+        self.speed = 10
         self.mouseDir = p.Vector2(0,0)
         self.pos = (self.x,self.y)
         self.shootedBullets : list[Bullet] = []

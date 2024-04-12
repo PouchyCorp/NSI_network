@@ -11,7 +11,7 @@ try:
         MapName = 'Maps\\'+str(argv[1])+'.pkl'
     else:
         #override for tests
-        MapName = 'Maps\\colorTest.pkl'
+        MapName = 'Maps\\bestMap.pkl'
         
     with open(MapName,'rb') as map:
         unpickledMap = pickle.load(map)

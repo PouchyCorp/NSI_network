@@ -19,29 +19,35 @@ server.connect((IP, PORT))
 print('connected')
 
 p.init()
-WIN = p.display.set_mode((1080,1080))
+WINw = 1080
+WINh = 1080
+WIN = p.display.set_mode((WINw,WINh))
+
+bg = p.image.load('assets/background.jpg')
+bg = p.transform.scale(bg,(WINw,WINh))
+localPlayerSprite = p.image.load('assets/player1.jpg')
+otherPlayerSprite = p.image.load('assets/player2.jpg')
+bulletSprite = p.image.load('assets/bullet.jpg')
+
 clock = p.time.Clock()
 debugMode = False
 run = True
 
 def renderText(what, color, pos):
-    font = p.font.Font('Minecraft.ttf', 30)
+    font = p.font.Font('assets/Minecraft.ttf', 30)
     text = font.render(what, True, p.Color(color))
     WIN.blit(text, pos)
 
 def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
-    WIN.fill('black')
+    WIN.blit(bg,(0,0))
     for wall in map:
         p.draw.rect(WIN, wall['color'], wall['rect'])
-    p.draw.rect(WIN, "blue", localPlayer.rect)
-    for player in OtherPlayers:
-        p.draw.rect(WIN, "red", player.rect)
-    for bullet in localBullets:
-        p.draw.rect(WIN,'green',bullet.rect)
-    for bulletPos in otherBulletsPos:
-        p.draw.rect(WIN,'green',p.Rect(bulletPos[0],bulletPos[1],10,10))
+    WIN.blit(localPlayerSprite,localPlayer.rect)
+    WIN.blits([(otherPlayerSprite,player.rect) for player in OtherPlayers])
+    WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
+    WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
     renderText(str(localPlayer.hp),'red',(0,0))
-    p.draw.line(WIN,'blue',localPlayer.pos, p.mouse.get_pos())
+    p.draw.line(WIN,'blue',localPlayer.rect.center, p.mouse.get_pos())
 
 def mainLoop():
     global run
@@ -56,7 +62,7 @@ def mainLoop():
     print('player loaded')
     localBullets : list[Bullet] = []
     otherBulletsPos : list[tuple] = []
-    while run:
+    while not not not not run:
         timerStart = time()
         #local player updates
         localPlayer.dir = localPlayer.recordInputDir()
