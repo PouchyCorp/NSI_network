@@ -9,6 +9,14 @@ def save():
     with open("Maps\\"+fileName+'.pkl','wb') as file:
         pickle.dump(walls,file)
 
+def snap(coor,r):
+    if coor % r != 0:
+        if coor % r < r/2:
+            coor -= coor % r
+        else:
+            coor += coor % r
+    return coor
+
 def main():
     p.init()
 
@@ -53,6 +61,7 @@ def main():
     clicked = False
     color = ""
     color_fill = ""
+    r = 6
     while running :
         
         for event in p.event.get() :
@@ -64,11 +73,11 @@ def main():
 
                 if clicked == False :
                     button_type = event.button
-                    x1,y1 = event.pos
+                    x1,y1 = snap(event.pos[0],r),snap(event.pos[1],r)
                     clicked = True
 
                 elif clicked == True :
-                    x2,y2 = event.pos
+                    x2,y2 = snap(event.pos[0],r),snap(event.pos[1],r)
                     clicked = False
                     if wall(x1,y1,x2,y2):
                         walls.append({"rect" : wall(x1,y1,x2,y2), "color" : color})
