@@ -14,6 +14,7 @@ class Player():
         self.mouseDir = p.Vector2(0,0)
         self.pos = (self.x,self.y)
         self.shootedBullets : list[Bullet] = []
+        self.handPos = (self.x,self.y)
 
     def recordInputDir(self) -> p.Vector2:
         keys = p.key.get_pressed()
@@ -57,14 +58,17 @@ class Player():
     def updateValues(self):
         self.x, self.y = (self.rect.x,self.rect.y)
         self.pos = (self.rect.x,self.rect.y)
+
         #
-        self.mouseDir = p.math.Vector2(p.mouse.get_pos()[0]- self.x,
-                                        p.mouse.get_pos()[1] - self.y)
+        self.mouseDir = p.math.Vector2(p.mouse.get_pos()[0]- self.rect.centerx,
+                                        p.mouse.get_pos()[1] - self.rect.centery)
         if self.mouseDir == p.Vector2(0,0):
             print('u tried lol')
             self.mouseDir = p.Vector2(0,-1)
-        self.mouseDir.scale_to_length(self.speed)
+        self.mouseDir.scale_to_length(self.w/1.5)
         #
+
+        self.handPos = (int(self.rect.centerx+self.mouseDir.x),int(self.rect.centery+self.mouseDir.y))
 
         
     

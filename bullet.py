@@ -9,6 +9,7 @@ class Bullet():
         self.speed = 5
         self.pos = (self.x,self.y)
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
+        self.lifeTime = 10
         
     def updateValues(self):
         self.x, self.y = (self.rect.x,self.rect.y)
@@ -18,6 +19,9 @@ class Bullet():
         shadowRect = self.rect.copy()
         shadowRect.move_ip(self.dir)
         if shadowRect.collidelistall(colliders):
+            self.lifeTime -= 1
+            if self.lifeTime == 0:
+                return
             collider = colliders[shadowRect.collidelist(colliders)]
             #print(collider.top, self.rect.centery, collider.bottom )
             if collider.top < self.rect.centery < collider.bottom:

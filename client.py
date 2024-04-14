@@ -27,7 +27,9 @@ bg = p.image.load('assets/background.jpg')
 bg = p.transform.scale(bg,(WINw,WINh))
 localPlayerSprite = p.image.load('assets/player1.jpg')
 otherPlayerSprite = p.image.load('assets/player2.jpg')
-bulletSprite = p.image.load('assets/bullet.jpg')
+bulletSprite = p.image.load('assets/bullet.png')
+gunSprite = p.image.load('assets/gun.png')
+gunSprite = p.transform.flip(gunSprite,True,False)
 
 clock = p.time.Clock()
 debugMode = False
@@ -38,16 +40,17 @@ def renderText(what, color, pos):
     text = font.render(what, True, p.Color(color))
     WIN.blit(text, pos)
 
-def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map):
+def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect):
     WIN.blit(bg,(0,0))
     for wall in map:
         p.draw.rect(WIN, wall['color'], wall['rect'])
     WIN.blit(localPlayerSprite,localPlayer.rect)
+    WIN.blit(rotatedGunSprite,gunRect)
     WIN.blits([(otherPlayerSprite,player.rect) for player in OtherPlayers])
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
     WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
     renderText(str(localPlayer.hp),'red',(0,0))
-    p.draw.line(WIN,'blue',localPlayer.rect.center, p.mouse.get_pos())
+    #p.draw.line(WIN,'blue',localPlayer.rect.center, p.mouse.get_pos())
 
 def mainLoop():
     global run
@@ -73,13 +76,21 @@ def mainLoop():
         attackSpeedTimer += attackSpeed/60
         if attackSpeedTimer >= 1:
             attackSpeedTimer = 0
-            localBullets.append(Bullet(localPlayer.x,localPlayer.y,localPlayer.mouseDir))
+            localBullets.append(Bullet(localPlayer.handPos[0],localPlayer.handPos[1],localPlayer.mouseDir))
 
         #local bullet updates
         for bullet in localBullets:
             bullet.move(mapColliders)
             bullet.updateValues()
+            if bullet.lifeTime <= 0:
+                del localBullets[localBullets.index(bullet)]
         localBulletsPos : list[tuple] = [bullet.pos for bullet in localBullets]
+
+        #gun sprite
+        angleToMouse = p.Vector2.angle_to(localPlayer.mouseDir,p.Vector2(0,0))
+        rotatedGunSprite = p.transform.rotate(gunSprite,angleToMouse)
+        gunRect = rotatedGunSprite.get_rect()
+        gunRect.center = localPlayer.handPos
 
         if debugMode:print('sending data to server')
 
@@ -108,7 +119,7 @@ def mainLoop():
         if debugMode:print(len(OtherPlayers))
         
 
-        draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map)
+        draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect)
 
         for event in p.event.get():
                 if event.type == p.QUIT:
