@@ -60,7 +60,6 @@ class Player():
     def updateValues(self):
         self.x, self.y = (self.rect.x,self.rect.y)
         self.pos = (self.rect.x,self.rect.y)
-        self.hitSomeone = []
 
         #
         self.mouseDir = p.math.Vector2(p.mouse.get_pos()[0]- self.rect.centerx,
@@ -74,10 +73,14 @@ class Player():
         self.handPos = (int(self.rect.centerx+self.mouseDir.x),int(self.rect.centery+self.mouseDir.y))
 
     def checkBulletCollision(self,players,bullets : list) -> list:
-        for player in players:
-            collision = (player.rect.collidelistall(bullets))
-        for index in collision:
-            bullets.pop(index)
+        if bullets:
+            for player in players:
+                collision = (player.rect.collidelistall(bullets))
+                if collision:
+                    self.hitSomeone.append(player)
+                    bullets.pop(collision[0])
+                else:
+                    self.hitSomeone = []
         return bullets
 
 

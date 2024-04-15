@@ -19,8 +19,8 @@ server.connect((IP, PORT))
 print('connected')
 
 p.init()
-WINw = 1080
-WINh = 1080
+WINw = 500
+WINh = 500
 WIN = p.display.set_mode((WINw,WINh))
 
 bg = p.image.load('assets/background.jpg')
@@ -75,7 +75,7 @@ def mainLoop():
 
         #attack speed logic
         attackSpeedTimer += attackSpeed/60
-        if attackSpeedTimer >= 1:
+        if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
             attackSpeedTimer = 0
             localBullets.append(Bullet(localPlayer.handPos[0]+localPlayer.mouseDir[0],localPlayer.handPos[1]+localPlayer.mouseDir[1],localPlayer.mouseDir))
 
@@ -89,7 +89,11 @@ def mainLoop():
 
         #gun sprite
         angleToMouse = p.Vector2.angle_to(localPlayer.mouseDir,p.Vector2(0,0))
-        rotatedGunSprite = p.transform.rotate(gunSprite,angleToMouse)
+        if localPlayer.handPos < localPlayer.rect.center:
+            flippedGunSprite = p.transform.flip(gunSprite,False,True)
+        else:
+            flippedGunSprite = p.transform.flip(gunSprite,False,False)
+        rotatedGunSprite = p.transform.rotate(flippedGunSprite,angleToMouse)
         gunRect = rotatedGunSprite.get_rect()
         gunRect.center = localPlayer.handPos
 
@@ -121,13 +125,13 @@ def mainLoop():
         #check bullet collision after receiving player data
         allPlayers = OtherPlayers.copy()
         allPlayers.append(localPlayer)
-        localPlayer.hitSomeone = localPlayer.checkBulletCollision(allPlayers,localBullets)
-
-        print(localPlayer.hitSomeone)
+        localBullets = localPlayer.checkBulletCollision(allPlayers,localBullets)
 
         for player in allPlayers:
             for hitPlayer in player.hitSomeone:
-                if hitPlayer == localPlayer:
+                print(hitPlayer.num)
+                if hitPlayer.num == localPlayer.num:
+                    print('hit')
                     localPlayer.hp-=1
 
         draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect)
