@@ -5,8 +5,8 @@ class Bullet():
         self.y = y
         self.w = 10
         self.h = 10
-        self.dir = dir
-        self.speed = 5
+        self.dir : p.Vector2 = dir
+        self.speed = 4
         self.pos = (self.x,self.y)
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.lifeTime = 10
@@ -28,5 +28,6 @@ class Bullet():
                 self.dir.x *= -1
             else:
                 self.dir.y *= -1
+        self.dir.scale_to_length(self.speed)
         p.Rect.move_ip(self.rect,self.dir)
             

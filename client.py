@@ -70,20 +70,21 @@ def mainLoop():
         #local player updates
         localPlayer.dir = localPlayer.recordInputDir()
         localPlayer.move(localPlayer.dir,mapColliders)
+
         localPlayer.updateValues()
 
         #attack speed logic
         attackSpeedTimer += attackSpeed/60
         if attackSpeedTimer >= 1:
             attackSpeedTimer = 0
-            localBullets.append(Bullet(localPlayer.handPos[0],localPlayer.handPos[1],localPlayer.mouseDir))
+            localBullets.append(Bullet(localPlayer.handPos[0]+localPlayer.mouseDir[0],localPlayer.handPos[1]+localPlayer.mouseDir[1],localPlayer.mouseDir))
 
         #local bullet updates
         for bullet in localBullets:
             bullet.move(mapColliders)
             bullet.updateValues()
             if bullet.lifeTime <= 0:
-                del localBullets[localBullets.index(bullet)]
+                localBullets.pop(localBullets.index(bullet))
         localBulletsPos : list[tuple] = [bullet.pos for bullet in localBullets]
 
         #gun sprite
@@ -111,13 +112,23 @@ def mainLoop():
             OtherPlayers : list[Player] = data['players']
             otherBulletsPos : list[tuple] = data['bullets']
 
+
             if debugMode:print(data)
             if debugMode:print('players recieved from server')
         else : 
             if debugMode:print('no other player from server')
 
-        if debugMode:print(len(OtherPlayers))
-        
+        #check bullet collision after receiving player data
+        allPlayers = OtherPlayers.copy()
+        allPlayers.append(localPlayer)
+        localPlayer.hitSomeone = localPlayer.checkBulletCollision(allPlayers,localBullets)
+
+        print(localPlayer.hitSomeone)
+
+        for player in allPlayers:
+            for hitPlayer in player.hitSomeone:
+                if hitPlayer == localPlayer:
+                    localPlayer.hp-=1
 
         draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect)
 
@@ -125,10 +136,12 @@ def mainLoop():
                 if event.type == p.QUIT:
                     run = False
                     return
+                
         timerEnd = time()
         timerFluctuation = round((timerEnd-timerStart)/(1/60),2)
         renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,100))
         
+        #p.transform.grayscale(WIN,WIN)
         p.display.update()
 
 mainLoop()

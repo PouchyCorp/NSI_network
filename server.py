@@ -11,7 +11,7 @@ try:
         MapName = 'Maps\\'+str(argv[1])+'.pkl'
     else:
         #override for tests
-        MapName = 'Maps\\bestMap.pkl'
+        MapName = 'Maps\\apagnan.pkl'
         
     with open(MapName,'rb') as map:
         unpickledMap = pickle.load(map)
@@ -73,7 +73,7 @@ def main():
                 
                 client.close()
                 return
-            
+
             #sending bullets from only the other players
             playersWithoutSelf = players.copy()
             del playersWithoutSelf[playerNum]
