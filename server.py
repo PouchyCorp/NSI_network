@@ -61,6 +61,10 @@ def main():
                 #unwrapping data into local variables to be redistributed to other players
                 players[playerNum] = data['player']
                 bulletsPos[playerNum] = data['bulletsPos']
+                
+                for player in players.values():
+                    print(player.num, player.hitSomeone)
+
             else:
                 #if no data recieved, disconnect the player and close thread
                 print(playerNum,' disconnected')
