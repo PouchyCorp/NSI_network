@@ -10,10 +10,12 @@ class Bullet():
         self.pos = (self.x,self.y)
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.lifeTime = 10
+        self.noCollisionTime = 3
         
     def updateValues(self):
         self.x, self.y = (self.rect.x,self.rect.y)
         self.pos = (self.rect.x,self.rect.y)
+        self.noCollisionTime -= 1
 
     def move(self, colliders : list[p.Rect]):
         shadowRect = self.rect.copy()

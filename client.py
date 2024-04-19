@@ -61,6 +61,7 @@ def mainLoop():
     map : list = pickle.loads(server.recv(2048))
     mapColliders = [wall['rect'] for wall in map]
     print('map loaded')
+    server.send(b'0')
     localPlayer : Player = pickle.loads(server.recv(2048))
     print('player loaded')
     localBullets : list[Bullet] = []
@@ -77,7 +78,7 @@ def mainLoop():
         attackSpeedTimer += attackSpeed/60
         if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
             attackSpeedTimer = 0
-            localBullets.append(Bullet(localPlayer.handPos[0]+localPlayer.mouseDir[0],localPlayer.handPos[1]+localPlayer.mouseDir[1],localPlayer.mouseDir))
+            localBullets.append(Bullet(localPlayer.handPos[0],localPlayer.handPos[1],localPlayer.mouseDir))
 
         #local bullet updates
         for bullet in localBullets:
@@ -131,7 +132,7 @@ def mainLoop():
             for hitPlayer in player.hitSomeone:
                 print(hitPlayer.num)
                 if hitPlayer.num == localPlayer.num:
-                    print('hit')
+                    print(player.num,'hit',localPlayer.num)
                     localPlayer.hp-=1
 
         draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect)

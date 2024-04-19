@@ -43,8 +43,8 @@ def main():
         #sending map to client
         client.send(pickle.dumps(unpickledMap))
 
-        #sleep because client don't catch player data if else
-        sleep(0.5)
+        #client confirmation because client don't catch player data if else
+        client.recv(1)
         #sending starting player class
         players[playerNum] = Player(50, 50, playerNum)
         client.send(pickle.dumps(players[playerNum]))
@@ -63,7 +63,8 @@ def main():
                 bulletsPos[playerNum] = data['bulletsPos']
                 
                 for player in players.values():
-                    print(player.num, player.hitSomeone)
+                    if player.hitSomeone:
+                        print(player.num, 'hit', player.hitSomeone)
 
             else:
                 #if no data recieved, disconnect the player and close thread

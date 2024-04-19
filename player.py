@@ -73,14 +73,13 @@ class Player():
         self.handPos = (int(self.rect.centerx+self.mouseDir.x),int(self.rect.centery+self.mouseDir.y))
 
     def checkBulletCollision(self,players,bullets : list) -> list:
+        self.hitSomeone = []
         if bullets:
             for player in players:
                 collision = (player.rect.collidelistall(bullets))
-                if collision:
+                if collision and bullets[collision[0]].noCollisionTime <= 0:
                     self.hitSomeone.append(player)
                     bullets.pop(collision[0])
-                else:
-                    self.hitSomeone = []
         return bullets
 
 

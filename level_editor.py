@@ -19,11 +19,9 @@ def snap(coor,r):
 
 def main():
     p.init()
-
     WIN = p.display.set_mode((1000, 1000))
     p.display.set_caption("TAGLIATELE Level Editor")
     grid = p.image.load('assets/background.jpg')
-
     def wall(x1,y1,x2,y2):
         try:
             if x2 > x1 and y2 > y1:

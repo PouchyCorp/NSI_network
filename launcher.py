@@ -12,7 +12,7 @@ def launch():
 master = tk.Tk()
 tk.Label(master, 
          text="IP").grid(row=0)
-tk.Label(master, 
+tk.Label(master,
          text="PORT").grid(row=1)
 
 e1 = tk.Entry(master)
