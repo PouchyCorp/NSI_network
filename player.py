@@ -71,6 +71,7 @@ class Player():
         #
 
         self.handPos = (int(self.rect.centerx+self.mouseDir.x),int(self.rect.centery+self.mouseDir.y))
+        self.otherHandPos = (int(self.rect.centerx-self.mouseDir.x),int(self.rect.centery-self.mouseDir.y))
 
     def checkBulletCollision(self,players,bullets : list) -> list:
         self.hitSomeone = []

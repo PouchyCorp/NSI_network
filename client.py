@@ -30,6 +30,8 @@ otherPlayerSprite = p.image.load('assets/player2.jpg')
 bulletSprite = p.image.load('assets/bullet.png')
 gunSprite = p.image.load('assets/gun.png')
 gunSprite = p.transform.flip(gunSprite,True,False)
+shieldSprite = p.image.load('assets/side_shield.png')
+shieldSprite = p.transform.scale_by(shieldSprite,2)
 
 clock = p.time.Clock()
 debugMode = False
@@ -40,17 +42,20 @@ def renderText(what, color, pos):
     text = font.render(what, True, p.Color(color))
     WIN.blit(text, pos)
 
-def draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect):
+def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):
     WIN.blit(bg,(0,0))
     for wall in map:
         p.draw.rect(WIN, wall['color'], wall['rect'])
     WIN.blit(localPlayerSprite,localPlayer.rect)
-    WIN.blit(rotatedGunSprite,gunRect)
     WIN.blits([(otherPlayerSprite,player.rect) for player in OtherPlayers])
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
     WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
+    WIN.blits([(rotatedGunSprite,guns[rotatedGunSprite]) for rotatedGunSprite in guns])
+    for i in shield:
+        p.draw.rect(WIN,'green',shield[localPlayer.num][1])
+    WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0))
-    #p.draw.line(WIN,'blue',localPlayer.rect.center, p.mouse.get_pos())
+    p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
 
 def mainLoop():
     global run
@@ -64,8 +69,9 @@ def mainLoop():
     server.send(b'0')
     localPlayer : Player = pickle.loads(server.recv(2048))
     print('player loaded')
-    localBullets : list[Bullet] = []
-    otherBulletsPos : list[tuple] = []
+    localBullets = []
+    otherBulletsPos = []
+    shields = {}
     while not not not not run:
         timerStart = time()
         #local player updates
@@ -80,23 +86,14 @@ def mainLoop():
             attackSpeedTimer = 0
             localBullets.append(Bullet(localPlayer.handPos[0],localPlayer.handPos[1],localPlayer.mouseDir))
 
+
         #local bullet updates
         for bullet in localBullets:
-            bullet.move(mapColliders)
+            bullet.move(mapColliders,shields)
             bullet.updateValues()
             if bullet.lifeTime <= 0:
                 localBullets.pop(localBullets.index(bullet))
         localBulletsPos : list[tuple] = [bullet.pos for bullet in localBullets]
-
-        #gun sprite
-        angleToMouse = p.Vector2.angle_to(localPlayer.mouseDir,p.Vector2(0,0))
-        if localPlayer.handPos < localPlayer.rect.center:
-            flippedGunSprite = p.transform.flip(gunSprite,False,True)
-        else:
-            flippedGunSprite = p.transform.flip(gunSprite,False,False)
-        rotatedGunSprite = p.transform.rotate(flippedGunSprite,angleToMouse)
-        gunRect = rotatedGunSprite.get_rect()
-        gunRect.center = localPlayer.handPos
 
         if debugMode:print('sending data to server')
 
@@ -135,7 +132,28 @@ def mainLoop():
                     print(player.num,'hit',localPlayer.num)
                     localPlayer.hp-=1
 
-        draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,rotatedGunSprite,gunRect)
+        #gun sprite
+        guns : dict[p.Surface,p.Rect] = {}
+        for player in allPlayers:
+            angleToMouse = p.Vector2.angle_to(player.mouseDir,p.Vector2(0,0))
+            if player.handPos < player.rect.center:
+                flippedGunSprite = p.transform.flip(gunSprite,False,True)
+            else:
+                flippedGunSprite = p.transform.flip(gunSprite,False,False)
+            rotatedGunSprite = p.transform.rotate(flippedGunSprite,angleToMouse)
+            gunRect = rotatedGunSprite.get_rect()
+            gunRect.center = player.handPos
+            guns[rotatedGunSprite] = gunRect
+
+        #shield sprite
+        for player in allPlayers:
+            angleToMouse = p.Vector2.angle_to(player.mouseDir,p.Vector2(0,0))
+            rotatedShieldSprite = p.transform.rotate(shieldSprite,angleToMouse)
+            shieldRect = rotatedShieldSprite.get_rect()
+            shieldRect.center = player.otherHandPos
+            shields[player.num] = (rotatedShieldSprite,shieldRect)
+
+        draw(localPlayer,OtherPlayers,localBullets,otherBulletsPos,map,guns,shields)
 
         for event in p.event.get():
                 if event.type == p.QUIT:
