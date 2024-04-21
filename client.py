@@ -25,10 +25,10 @@ WIN = p.display.set_mode((WINw,WINh))
 
 bg = p.image.load('assets/background.jpg')
 bg = p.transform.scale(bg,(WINw,WINh))
-localPlayerSprite = p.image.load('assets/player1.jpg')
-otherPlayerSprite = p.image.load('assets/player2.jpg')
 bulletSprite = p.image.load('assets/bullet.png')
 gunSprite = p.image.load('assets/gun.png')
+playerFaceSprite = p.image.load('assets/playerFace.jpg')
+playerGreyScaleSprite = p.image.load('assets/playerGreyScale.jpg')
 gunSprite = p.transform.flip(gunSprite,True,False)
 shieldSprite = p.image.load('assets/side_shield.png')
 shieldSprite = p.transform.scale_by(shieldSprite,2)
@@ -42,6 +42,19 @@ def renderText(what, color, pos):
     text = font.render(what, True, p.Color(color))
     WIN.blit(text, pos)
 
+def setPlayerSprite(surface, color):
+    rect = surface.get_rect()
+    surf = p.Surface(rect.size, p.SRCALPHA)
+    surf.fill(color)
+
+    newSurf = surface.copy()
+    newSurf.blit(surf, (0, 0), None, p.BLEND_ADD)
+    newSurf.blit(playerFaceSprite,(0,0))
+    return newSurf
+
+localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
+otherPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
+
 def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):
     WIN.blit(bg,(0,0))
     for wall in map:
@@ -51,8 +64,6 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
     WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
     WIN.blits([(rotatedGunSprite,guns[rotatedGunSprite]) for rotatedGunSprite in guns])
-    for i in shield:
-        p.draw.rect(WIN,'green',shield[localPlayer.num][1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0))
     p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
@@ -72,6 +83,7 @@ def mainLoop():
     localBullets = []
     otherBulletsPos = []
     shields = {}
+
     while not not not not run:
         timerStart = time()
         #local player updates
@@ -127,9 +139,7 @@ def mainLoop():
 
         for player in allPlayers:
             for hitPlayer in player.hitSomeone:
-                print(hitPlayer.num)
                 if hitPlayer.num == localPlayer.num:
-                    print(player.num,'hit',localPlayer.num)
                     localPlayer.hp-=1
 
         #gun sprite

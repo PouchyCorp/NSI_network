@@ -62,9 +62,6 @@ def main():
                 players[playerNum] = data['player']
                 bulletsPos[playerNum] = data['bulletsPos']
                 
-                for player in players.values():
-                    if player.hitSomeone:
-                        print(player.num, 'hit', player.hitSomeone)
 
             else:
                 #if no data recieved, disconnect the player and close thread
