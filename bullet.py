@@ -18,15 +18,16 @@ class Bullet():
         self.noCollisionTime -= 1
 
     def move(self, colliders, shields):
-        shieldsCollider = [shield[1] for shield in shields.values()]
         shadowRect = self.rect.copy()
         shadowRect.move_ip(self.dir)
-        if shadowRect.collidelistall(colliders) or shadowRect.collidelistall(shieldsCollider):
+        shieldsCollider = [shield[1] for shield in shields.values()]
+        allColliders = colliders + shieldsCollider
+        collisions = shadowRect.collidelistall(allColliders)
+        for collision in collisions:
             self.lifeTime -= 1
             if self.lifeTime == 0:
                 return
-            collider = colliders[shadowRect.collidelist(colliders)]
-            #print(collider.top, self.rect.centery, collider.bottom )
+            collider = allColliders[collision]
             if collider.top < self.rect.centery < collider.bottom:
                 self.dir.x *= -1
             else:
