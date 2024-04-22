@@ -27,7 +27,7 @@ bg = p.image.load('assets/background.jpg')
 bg = p.transform.scale(bg,(WINw,WINh))
 bulletSprite = p.image.load('assets/bullet.png')
 gunSprite = p.image.load('assets/gun.png')
-playerFaceSprite = p.image.load('assets/playerFace.jpg')
+playerFaceSprite = p.image.load('assets/playerFace.png')
 playerGreyScaleSprite = p.image.load('assets/playerGreyScale.jpg')
 gunSprite = p.transform.flip(gunSprite,True,False)
 shieldSprite = p.image.load('assets/side_shield.png')
@@ -52,7 +52,8 @@ def setPlayerSprite(surface, color):
     newSurf.blit(playerFaceSprite,(0,0))
     return newSurf
 
-localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
+#dynamic player sprite
+localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,(255))
 otherPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
 
 def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):

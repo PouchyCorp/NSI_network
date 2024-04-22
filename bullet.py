@@ -32,6 +32,10 @@ class Bullet():
                 self.dir.x *= -1
             else:
                 self.dir.y *= -1
+
+            #fonction recursive oueeeee (pour que la balle ne traverse pas les murs)
+            self.move(colliders,shields)
+
         self.dir.scale_to_length(self.speed)
         p.Rect.move_ip(self.rect,self.dir)
             
