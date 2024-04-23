@@ -86,7 +86,6 @@ def main():
                     color, color_fill = "blue", "blue"
 
             if clicked == True:
-                
                     ghostSurfacePos : tuple = surfacePos(x1,y1,p.mouse.get_pos()[0],p.mouse.get_pos()[1])
                     ghostSurface = p.Surface((abs(p.mouse.get_pos()[0]-x1),abs(p.mouse.get_pos()[1]-y1)))
                     ghostSurface.set_alpha(128)

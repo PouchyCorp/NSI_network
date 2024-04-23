@@ -19,16 +19,16 @@ server.connect((IP, PORT))
 print('connected')
 
 p.init()
-WINw = 500
-WINh = 500
-WIN = p.display.set_mode((WINw,WINh))
+WIN = p.display.set_mode((0,0),p.FULLSCREEN)
+WINw, WINh = WIN.get_size()
 
 bg = p.image.load('assets/background.jpg')
 bg = p.transform.scale(bg,(WINw,WINh))
 bulletSprite = p.image.load('assets/bullet.png')
 gunSprite = p.image.load('assets/gun.png')
 playerFaceSprite = p.image.load('assets/playerFace.png')
-playerGreyScaleSprite = p.image.load('assets/playerGreyScale.jpg')
+playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
+#playerGreyScaleSprite.set_alpha(100)
 gunSprite = p.transform.flip(gunSprite,True,False)
 shieldSprite = p.image.load('assets/side_shield.png')
 shieldSprite = p.transform.scale_by(shieldSprite,2)
@@ -44,16 +44,17 @@ def renderText(what, color, pos):
 
 def setPlayerSprite(surface, color):
     rect = surface.get_rect()
-    surf = p.Surface(rect.size, p.SRCALPHA)
+    surf = p.Surface(rect.size)
+    surf.set_alpha(255)
     surf.fill(color)
 
     newSurf = surface.copy()
-    newSurf.blit(surf, (0, 0), None, p.BLEND_ADD)
+    newSurf.blit(surf, (0, 0), None, p.BLEND_MULT)
     newSurf.blit(playerFaceSprite,(0,0))
     return newSurf
 
 #dynamic player sprite
-localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,(255))
+localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,(255,0,0))
 otherPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
 
 def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):
@@ -89,7 +90,7 @@ def mainLoop():
         timerStart = time()
         #local player updates
         localPlayer.dir = localPlayer.recordInputDir()
-        localPlayer.move(localPlayer.dir,mapColliders)
+        localPlayer.move(localPlayer.dir,map)
 
         localPlayer.updateValues()
 
@@ -97,7 +98,7 @@ def mainLoop():
         attackSpeedTimer += attackSpeed/60
         if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
             attackSpeedTimer = 0
-            localBullets.append(Bullet(localPlayer.handPos[0],localPlayer.handPos[1],localPlayer.mouseDir))
+            localBullets.append(Bullet(localPlayer.rect.centerx,localPlayer.rect.centery,localPlayer.mouseDir))
 
 
         #local bullet updates

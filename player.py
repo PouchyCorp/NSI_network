@@ -31,11 +31,18 @@ class Player():
             vector += (0,-self.speed)
         return vector
 
-    def move(self,dir : p.Vector2,colliders : list[p.Rect]):
+    def move(self,dir : p.Vector2,map):
         if dir != p.Vector2(0,0):
             shadowRect = self.rect.copy()
             shadowRect.move_ip(dir)
-            if shadowRect.collidelistall(colliders):
+            colliders = [wall['rect'] for wall in map]
+            collisions = shadowRect.collidelistall(colliders)
+            inBlue = True
+            for coll in collisions:
+                if map[coll]['color'] != 'blue':
+                    inBlue = False
+                    break
+            if collisions and not inBlue:
                 #all that to 'glide' when moving in diagonal on a wall
                 if dir.x == 0 or dir.y == 0:
                     return
