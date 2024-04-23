@@ -19,7 +19,7 @@ server.connect((IP, PORT))
 print('connected')
 
 p.init()
-WIN = p.display.set_mode((0,0),p.FULLSCREEN)
+WIN = p.display.set_mode((500,500))
 WINw, WINh = WIN.get_size()
 
 bg = p.image.load('assets/background.jpg')
@@ -68,7 +68,7 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     WIN.blits([(rotatedGunSprite,guns[rotatedGunSprite]) for rotatedGunSprite in guns])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0))
-    p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
+    #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
 
 def mainLoop():
     global run
@@ -98,7 +98,11 @@ def mainLoop():
         attackSpeedTimer += attackSpeed/60
         if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
             attackSpeedTimer = 0
-            localBullets.append(Bullet(localPlayer.rect.centerx,localPlayer.rect.centery,localPlayer.mouseDir))
+            spawnDistFromPlayer = localPlayer.mouseDir.copy()
+            spawnDistFromPlayer.scale_to_length(20)
+            bulletSpawnPoint = (int(localPlayer.rect.centerx+spawnDistFromPlayer.x),int(localPlayer.rect.centery+spawnDistFromPlayer.y))
+
+            localBullets.append(Bullet(bulletSpawnPoint[0],bulletSpawnPoint[1],localPlayer.mouseDir.normalize()))
 
 
         #local bullet updates

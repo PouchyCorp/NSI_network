@@ -10,7 +10,7 @@ class Bullet():
         self.pos = (self.x,self.y)
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.lifeTime = 20
-        self.noCollisionTime = 6
+        self.noCollisionTime = 8
         
     def updateValues(self):
         self.x, self.y = (self.rect.x,self.rect.y)
@@ -24,6 +24,8 @@ class Bullet():
         allColliders = colliders + shieldsCollider
         collisions = shadowRect.collidelistall(allColliders)
         for collision in collisions:
+            if shadowRect.collidelistall(shieldsCollider):
+                print('pok')
             if self.lifeTime == 0:
                 return
             self.lifeTime -= 1
@@ -34,10 +36,11 @@ class Bullet():
                 self.dir.y *= -1
 
             #fonction recursive oueeeee (pour que la balle ne traverse pas les murs)
-            print(self.lifeTime)
             self.dir.scale_to_length(self.speed)
             p.Rect.move_ip(self.rect,self.dir)
-            self.move(colliders,shields)
+            #if self.rect.collidelistall(allColliders):
+            #    self.lifeTime = 0
+            #    print('bonk')
             return
 
         self.dir.scale_to_length(self.speed)

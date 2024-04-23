@@ -14,7 +14,7 @@ class Player():
         self.mouseDir = p.Vector2(0,0)
         self.pos = (self.x,self.y)
         self.shootedBullets : list[Bullet] = []
-        self.handPos = (self.x,self.y)
+        self.handPos : tuple[int,int] = (self.x,self.y)
         self.dead : bool = False
         self.hitSomeone : list[Player] = []
 
