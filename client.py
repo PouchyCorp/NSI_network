@@ -19,6 +19,8 @@ server.connect((IP, PORT))
 print('connected')
 
 p.init()
+p.mixer.init()
+
 WIN = p.display.set_mode((500,500))
 WINw, WINh = WIN.get_size()
 
@@ -32,6 +34,12 @@ playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
 gunSprite = p.transform.flip(gunSprite,True,False)
 shieldSprite = p.image.load('assets/side_shield.png')
 shieldSprite = p.transform.scale_by(shieldSprite,2)
+deathSound = p.mixer.Sound('assets/death.mp3')
+shootSound = p.mixer.Sound('assets/shoot.mp3')
+hitSound = p.mixer.Sound('assets/hit.mp3')
+deathSound.set_volume(1)
+shootSound.set_volume(0.05)
+hitSound.set_volume(0.5)
 
 clock = p.time.Clock()
 debugMode = False
@@ -66,6 +74,8 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
     WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
     WIN.blits([(rotatedGunSprite,guns[rotatedGunSprite]) for rotatedGunSprite in guns])
+    for shield_ in shield.values():
+        p.draw.rect(WIN,'green',shield_[1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0))
     #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
@@ -97,6 +107,7 @@ def mainLoop():
         #attack speed logic
         attackSpeedTimer += attackSpeed/60
         if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
+            p.mixer.Sound.play(shootSound)
             attackSpeedTimer = 0
             spawnDistFromPlayer = localPlayer.mouseDir.copy()
             spawnDistFromPlayer.scale_to_length(20)
@@ -146,6 +157,8 @@ def mainLoop():
         for player in allPlayers:
             for hitPlayer in player.hitSomeone:
                 if hitPlayer.num == localPlayer.num:
+                    p.mixer.Sound.play(hitSound)
+                    print(p.mixer.Sound)
                     localPlayer.hp-=1
 
         #gun sprite
@@ -185,4 +198,5 @@ def mainLoop():
 
 mainLoop()
 server.close()
+p.mixer.quit()
 p.quit()

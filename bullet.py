@@ -16,6 +16,7 @@ class Bullet():
         self.x, self.y = (self.rect.x,self.rect.y)
         self.pos = (self.rect.x,self.rect.y)
         self.noCollisionTime -= 1
+    
 
     def move(self, colliders, shields):
         shadowRect = self.rect.copy()
