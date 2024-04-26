@@ -74,8 +74,8 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
     WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
     WIN.blits([(rotatedGunSprite,guns[rotatedGunSprite]) for rotatedGunSprite in guns])
-    for shield_ in shield.values():
-        p.draw.rect(WIN,'green',shield_[1])
+    #for shield_ in shield.values():
+    #    p.draw.rect(WIN,'green',shield_[1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0))
     #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
