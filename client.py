@@ -84,7 +84,7 @@ def mainLoop():
     global run
     global debugMode
 
-    attackSpeed = 1
+    attackSpeed = 5
     attackSpeedTimer = 1
     map : list = pickle.loads(server.recv(2048))
     mapColliders = [wall['rect'] for wall in map]
@@ -99,21 +99,23 @@ def mainLoop():
     while not not not not run:
         timerStart = time()
         #local player updates
-        localPlayer.dir = localPlayer.recordInputDir()
-        localPlayer.move(localPlayer.dir,map)
 
-        localPlayer.updateValues()
+        if not localPlayer.dead:
+            localPlayer.dir = localPlayer.recordInputDir()
+            localPlayer.move(localPlayer.dir,map)
 
-        #attack speed logic
-        attackSpeedTimer += attackSpeed/60
-        if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
-            p.mixer.Sound.play(shootSound)
-            attackSpeedTimer = 0
-            spawnDistFromPlayer = localPlayer.mouseDir.copy()
-            spawnDistFromPlayer.scale_to_length(20)
-            bulletSpawnPoint = (int(localPlayer.rect.centerx+spawnDistFromPlayer.x),int(localPlayer.rect.centery+spawnDistFromPlayer.y))
+            localPlayer.updateValues()
 
-            localBullets.append(Bullet(bulletSpawnPoint[0],bulletSpawnPoint[1],localPlayer.mouseDir.normalize()))
+            #attack speed logic
+            attackSpeedTimer += attackSpeed/60
+            if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
+                p.mixer.Sound.play(shootSound)
+                attackSpeedTimer = 0
+                spawnDistFromPlayer = localPlayer.mouseDir.copy()
+                spawnDistFromPlayer.scale_to_length(20)
+                bulletSpawnPoint = (int(localPlayer.rect.centerx+spawnDistFromPlayer.x),int(localPlayer.rect.centery+spawnDistFromPlayer.y))
+
+                localBullets.append(Bullet(bulletSpawnPoint[0],bulletSpawnPoint[1],localPlayer.mouseDir.normalize()))
 
 
         #local bullet updates
@@ -156,10 +158,18 @@ def mainLoop():
 
         for player in allPlayers:
             for hitPlayer in player.hitSomeone:
+                #hit collision detection
                 if hitPlayer.num == localPlayer.num:
                     p.mixer.Sound.play(hitSound)
-                    print(p.mixer.Sound)
                     localPlayer.hp-=1
+
+            #death system
+            if player.hp <= 0 and not player.dead:
+                p.mixer.Sound.play(deathSound)
+                if player.num == localPlayer.num:
+                    localPlayer.dead = True
+                    localPlayer.rect.x, localPlayer.rect.y= 10000,10000
+                    localPlayer.updateValues()
 
         #gun sprite
         guns : dict[p.Surface,p.Rect] = {}
@@ -193,7 +203,8 @@ def mainLoop():
         timerFluctuation = round((timerEnd-timerStart)/(1/60),2)
         renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,100))
         
-        #p.transform.grayscale(WIN,WIN)
+        if localPlayer.dead:
+            p.transform.grayscale(WIN,WIN)
         p.display.update()
 
 mainLoop()
