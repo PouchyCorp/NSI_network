@@ -24,11 +24,11 @@ except:
 
 
 def main():
-    IP, PORT = '', 12345
+    IP, PORT = socket.gethostbyname(socket.gethostname()), 12345
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((IP, PORT))
     server.listen()
-    print(f"Listening on {socket.gethostbyname(socket.gethostname())}: {PORT}")
+    print(f"Listening on {IP}: {PORT}")
     print('waiting for client connections')
     clientList = {}
     players : dict[int, Player] = {}
