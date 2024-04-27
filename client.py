@@ -1,5 +1,5 @@
 import sys
-from socket import socket
+import socket
 import pygame as p
 import pickle
 from player import Player
@@ -10,11 +10,11 @@ try:
     IP = str(sys.argv[1])
     PORT = int(sys.argv[2])
 except:
-    IP = '127.0.0.1'
+    IP = '192.168.1.100'
     PORT = 12345
 
 print('trying to connect to server')
-server = socket()
+server = socket.socket()
 server.connect((IP, PORT))
 print('connected')
 

@@ -1,4 +1,4 @@
-from socket import socket
+import socket
 from sys import argv
 import pygame as pg
 import _thread
@@ -11,7 +11,7 @@ try:
         MapName = 'Maps\\'+str(argv[1])+'.pkl'
     else:
         #override for tests
-        MapName = 'Maps\\UWU.pkl'
+        MapName = 'Maps\\blockyMap.pkl'
         
     with open(MapName,'rb') as map:
         unpickledMap = pickle.load(map)
@@ -24,10 +24,12 @@ except:
 
 
 def main():
+    IP, PORT = '', 12345
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((IP, PORT))
+    server.listen()
+    print(f"Listening on {socket.gethostbyname(socket.gethostname())}: {PORT}")
     print('waiting for client connections')
-    server = socket()
-    server.bind(('127.0.0.1', 12345))
-    server.listen(5)
     clientList = {}
     players : dict[int, Player] = {}
     bulletsPos : dict[int, tuple] = {}
