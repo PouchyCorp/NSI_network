@@ -57,7 +57,10 @@ def main():
 
         waiting = True
         while waiting :
-        if playerReady == playerConnected:
+            ready = client.recv(2)
+            if ready["ready"]:
+                playerReady += 1
+            if playerReady == playerConnected:
                 waiting = not waiting
         
         while True:
