@@ -7,6 +7,7 @@ import tkinter as tk
 def launch():
     ip = e1.get()
     port = e2.get()
+    playername = e3.get()
     subprocess.Popen("python client.py "+ip+" "+port)
 
 master = tk.Tk()
