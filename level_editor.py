@@ -16,7 +16,7 @@ def snap(coor,r):
 
 def main():
     p.init()
-    WIN = p.display.set_mode((1000, 1000))
+    WIN = p.display.set_mode((1920, 1080))
     p.display.set_caption("TAGLIATELE Level Editor")
     grid = p.image.load('assets/background.jpg')
     WIDTH, HEIGHT = WIN.get_size()
