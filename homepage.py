@@ -18,22 +18,22 @@ checkSprite = p.image.load('assets/check.png')
                                            
 #the different butons to choose your color
 
+colors=["blue","red","green","yellow","pink","orange"]
+color_selected = "blue"
+ready = False
+
 def drawbuton(color,x,y):
     rect = p.Rect(x,y,100,100)
     p.draw.rect(WIN,color,rect)
     p.display.update()
-
-colors=["blue","red","green","yellow","pink","orange"]
-color_selected = "blue"
-ready = False
+  
+for k in range(len(colors)):
+    drawbuton(colors[k],(260*k+260),490)
 
 def main():
     ready = False  
     waiting = True
     while waiting:
-        
-        for k in range(len(colors)):
-            drawbuton(colors[k],(260*k+260),490)
 
         for event in p.event.get() :
 
