@@ -35,13 +35,17 @@ def main():
     bulletsPos : dict[int, tuple] = {}
     playerNum = 0
     debugMode = False
-    
+
+    playerConnected = 0
+    playerReady = 0
     
 
     def on_new_client(client,playerNum : int):
+
         clock = pg.time.Clock()
         print('player',playerNum,'connected')
-
+        playerConnected += 1
+        
         #sending map to client
         client.send(pickle.dumps(unpickledMap))
 
@@ -102,7 +106,10 @@ def main():
                 client.send(b'0')
                 if debugMode:print('sending blank to',playerNum)
             
-
+    waiting = True
+    while waiting :
+        if playerReady == playerConnected:
+                waiting = not waiting
 
     run = True
     while run:
