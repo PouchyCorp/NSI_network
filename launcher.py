@@ -15,7 +15,7 @@ tk.Label(master,
 tk.Label(master,
          text="PORT").grid(row=1)
 tk.Label(master,
-         text="Enter your pseudo").grid(row=2)
+         text="Enter your nickname").grid(row=2)
 
 e1 = tk.Entry(master)
 e2 = tk.Entry(master)
