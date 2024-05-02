@@ -54,6 +54,12 @@ def main():
         #sending starting player class
         players[playerNum] = Player(50, 50, playerNum)
         client.send(pickle.dumps(players[playerNum]))
+
+        waiting = True
+        while waiting :
+        if playerReady == playerConnected:
+                waiting = not waiting
+        
         while True:
             clock.tick(60)
             
@@ -106,10 +112,6 @@ def main():
                 client.send(b'0')
                 if debugMode:print('sending blank to',playerNum)
             
-    waiting = True
-    while waiting :
-        if playerReady == playerConnected:
-                waiting = not waiting
 
     run = True
     while run:
