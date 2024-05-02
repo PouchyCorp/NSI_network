@@ -15,22 +15,7 @@ WIN.blit(readybuton,(785,800))
 p.display.update()
 clicSound = p.mixer.Sound('assets/clic.mp3')
 checkSprite = p.image.load('assets/check.png')
-
-                                                        # Ici j'essaye de mettre un petit check sur la couleur choisie mais
-                                                        # je n'arrive pas à l'afficher ...
-def setcheckSprite(surface):
-    rect = surface.get_rect()
-    surf = p.Surface(rect.size)
-    surf.set_alpha(255)
-
-    newSurf = surface.copy()
-    newSurf.blit(surf, (0, 0), None, p.BLEND_MULT)
-    newSurf.blit(checkSprite,(0,0))
-    return newSurf
-
-localcheckSprite = setcheckSprite(checkSprite)
-
-
+                                           
 #the different butons to choose your color
 
 def drawbuton(color,x,y):
