@@ -5,6 +5,9 @@ import pickle
 from player import Player
 from bullet import Bullet 
 from time import time
+from homepage import main
+
+main()
 
 try:
     IP = str(sys.argv[1])

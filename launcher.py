@@ -8,7 +8,8 @@ def launch():
     ip = e1.get()
     port = e2.get()
     playername = e3.get()
-    subprocess.Popen("python client.py "+ip+" "+port)
+    #subprocess.Popen("python client.py "+ip+" "+port)
+    subprocess.Popen("client.py ")
 
 master = tk.Tk()
 tk.Label(master, 
