@@ -24,7 +24,7 @@ except:
 
 
 def main():
-    IP, PORT = socket.gethostbyname(socket.gethostname()), 12345
+    IP, PORT = '', 12345
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((IP, PORT))
     server.listen()
@@ -63,7 +63,6 @@ def main():
                 #unwrapping data into local variables to be redistributed to other players
                 players[playerNum] = data['player']
                 bulletsPos[playerNum] = data['bulletsPos']
-                
 
             else:
                 #if no data recieved, disconnect the player and close thread
