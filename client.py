@@ -21,7 +21,7 @@ print('connected')
 p.init()
 p.mixer.init()
 
-WIN = p.display.set_mode((500,500))
+WIN = p.display.set_mode((0,0),p.FULLSCREEN)
 WINw, WINh = WIN.get_size()
 
 bg = p.image.load('assets/background.jpg')
