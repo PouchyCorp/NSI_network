@@ -24,7 +24,7 @@ except:
 
 
 def main():
-    IP, PORT = socket.gethostbyname(socket.gethostname()), 12345
+    IP, PORT = "192.168.1.100" , 12345
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((IP, PORT))
     server.listen()
