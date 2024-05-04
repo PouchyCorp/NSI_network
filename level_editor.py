@@ -21,6 +21,7 @@ def main():
     grid = p.image.load('assets/background.jpg')
     WIDTH, HEIGHT = WIN.get_size()
     gridXSize, gridYSize = HEIGHT/50, HEIGHT/50
+    
     def wall(x1,y1,x2,y2):
         try:
             if x2 > x1 and y2 > y1:
@@ -31,9 +32,10 @@ def main():
                 return p.Rect(x2,y1,abs(x2-x1),abs(y2-y1))
             elif x2 < x1 and y2 < y1 :
                 return p.Rect(x2,y2,abs(x2-x1),abs(y2-y1))
+            
         except:
             return False
-
+            
     def surfacePos(x1:int,y1:int,x2:int,y2:int):
         if x2 > x1 and y2 > y1:
             return x1,y1

@@ -7,22 +7,10 @@ from bullet import Bullet
 from time import time
 from homepage import main
 
-main()
-
-try:
-    IP = str(sys.argv[1])
-    PORT = int(sys.argv[2])
-except:
-    IP = '176.169.188.110'
-    PORT = 12345
-
-print('trying to connect to server')
-server = socket.socket()
-server.connect((IP, PORT))
-print('connected')
-
 p.init()
 p.mixer.init()
+
+main()
 
 WIN = p.display.set_mode((500,500))
 WINw, WINh = WIN.get_size()

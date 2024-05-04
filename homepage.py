@@ -1,7 +1,7 @@
 import pygame as p
 import tkinter as tk
 from time import time
-
+import socket
 
 p.init()
 
@@ -11,7 +11,7 @@ bg = p.image.load('assets/homepage.jpg')
 bg = p.transform.scale(bg,(WINw,WINh))
 WIN.blit(bg,(0,0))
 readybuton = p.image.load('assets/ready.png')
-WIN.blit(readybuton,(785,800))
+WIN.blit(readybuton,(785,650))
 p.display.update()
 clicSound = p.mixer.Sound('assets/clic.mp3')
 checkSprite = p.image.load('assets/check.png')
@@ -42,12 +42,24 @@ def drawbuton(color,x,y):
     p.display.update()
   
 for k in range(len(colors)):
-    drawbuton(colors[k],(260*k+260),490)
-WIN.blit(checkSprite,(335,495))
+    drawbuton(colors[k],(260*k+260),500)
+WIN.blit(checkSprite,(335,505))
 
 
 
 def main():
+    try:
+        IP = str(sys.argv[1])
+        PORT = int(sys.argv[2])
+    except:
+        IP = '176.169.188.110'
+        PORT = 12345
+
+    print('trying to connect to server')
+    server = socket.socket()
+    server.connect((IP, PORT))
+    print('connected')
+    
     ready = False  
     waiting = True
     while waiting:
@@ -62,30 +74,30 @@ def main():
                 
                 #if clicked on a colored rectangle
                 for k in range(len(colors)):
-                    if (260*k+260) <= event.pos[0] <= (260*k+360) and 490 <= event.pos[1] <= 590:
+                    if (260*k+260) <= event.pos[0] <= (260*k+360) and 500 <= event.pos[1] <= 600:
                         p.mixer.Sound.play(clicSound)
                         color_selected = colors[k]
                         
-                        WIN.blit(checkSprite,((260*k+335),495))
+                        WIN.blit(checkSprite,((260*k+335),505))
                         
                         for j in range(len(colors)):
                             if j != k:
-                                drawbuton(colors[j],(260*j+260),490)
+                                drawbuton(colors[j],(260*j+260),500)
                         
                 #if clicked on the ready buton
-                if 785 <= event.pos[0] <= 1135 and 800 <= event.pos[1] <= 900 and ready == False :
+                if 785 <= event.pos[0] <= 1135 and 650 <= event.pos[1] <= 750 and ready == False :
                     ready = True
                     countdown = time()
                     p.mixer.Sound.play(clicSound)
 
                     while time() - countdown < 0.2 :
                         readybuton = p.image.load('assets/ready_clicked.png')
-                        WIN.blit(readybuton,(785,800))
+                        WIN.blit(readybuton,(785,650))
                         p.display.update()
                         
                     while 0.2 < time() - countdown < 0.4 :
                         readybuton = p.image.load('assets/ready.png')
-                        WIN.blit(readybuton,(785,800))
+                        WIN.blit(readybuton,(785,650))
                         p.display.update()
                     server.send(pickle.dumps({'playercolor' : color_selected,'ready' : True}))
                 
@@ -97,5 +109,4 @@ def main():
         p.display.update()
 
 
-main()
 p.quit()
