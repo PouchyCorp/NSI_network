@@ -10,7 +10,7 @@ try:
     IP = str(sys.argv[1])
     PORT = int(sys.argv[2])
 except:
-    IP = '192.168.56.1'
+    IP = '176.169.188.110'
     PORT = 12345
 
 print('trying to connect to server')
