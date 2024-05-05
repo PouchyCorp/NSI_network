@@ -6,7 +6,7 @@ class Bullet():
         self.w = 10
         self.h = 10
         self.dir : p.Vector2 = dir
-        self.speed = 7
+        self.speed = 8
         self.pos = (self.x,self.y)
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.lifeTime = 20

@@ -28,7 +28,7 @@ def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((IP, PORT))
     server.listen()
-    print(f"Listening on {IP}: {PORT}")
+    print(f"Listening on port: {PORT}")
     print('waiting for client connections')
     clientList = {}
     players : dict[int, Player] = {}
