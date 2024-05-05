@@ -2,6 +2,7 @@ import pygame as p
 import tkinter as tk
 from time import time
 import socket
+import player as Player
 
 p.init()
 
@@ -19,6 +20,8 @@ playerFaceSprite = p.image.load('assets/playerFace.png')
 playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
 playerFaceSprite = p.transform.scale(playerFaceSprite,(100,100))
 playerGreyScaleSprite = p.transform.scale(playerGreyScaleSprite,(100,100))
+
+
                                            
 #the different butons to choose your color
 
@@ -42,7 +45,7 @@ def drawbuton(color,x,y):
     p.display.update()
   
 for k in range(len(colors)):
-    drawbuton(colors[k],(260*k+260),500)
+    drawbuton(colors[k],260*(k+1),500)
 WIN.blit(checkSprite,(335,505))
 
 
@@ -74,7 +77,7 @@ def main():
                 
                 #if clicked on a colored rectangle
                 for k in range(len(colors)):
-                    if (260*k+260) <= event.pos[0] <= (260*k+360) and 500 <= event.pos[1] <= 600:
+                    if 260*(k+1) <= event.pos[0] <= (260*k+360) and 500 <= event.pos[1] <= 600:
                         p.mixer.Sound.play(clicSound)
                         color_selected = colors[k]
                         
@@ -82,7 +85,7 @@ def main():
                         
                         for j in range(len(colors)):
                             if j != k:
-                                drawbuton(colors[j],(260*j+260),500)
+                                drawbuton(colors[j],260*(j+1),500)
                         
                 #if clicked on the ready buton
                 if 785 <= event.pos[0] <= 1135 and 650 <= event.pos[1] <= 750 and ready == False :
@@ -99,7 +102,7 @@ def main():
                         readybuton = p.image.load('assets/ready.png')
                         WIN.blit(readybuton,(785,650))
                         p.display.update()
-                    server.send(pickle.dumps({'playercolor' : color_selected,'ready' : True}))
+                    server.send(pickle.dumps({'color' : color_selected,'ready' : True}))
                 
                 if ready:
                     print("waiting for other players...")
