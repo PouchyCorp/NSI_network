@@ -36,7 +36,6 @@ def main():
     playerNum = 0
     debugMode = False
 
-    playerConnected = 0
     playerReady = 0
     
 
@@ -44,7 +43,6 @@ def main():
 
         clock = pg.time.Clock()
         print('player',playerNum,'connected')
-        playerConnected += 1
         
         #sending map to client
         client.send(pickle.dumps(unpickledMap))
@@ -61,6 +59,7 @@ def main():
             if ready["ready"]:
                 playerReady += 1
             if playerReady == playerConnected:
+                client.send(pickle.dumps(players[playerNum]))
                 waiting = not waiting
         
         while True:
