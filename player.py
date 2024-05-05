@@ -17,6 +17,9 @@ class Player():
         self.handPos : tuple[int,int] = (self.x,self.y)
         self.dead : bool = False
         self.hitSomeone : list[Player] = []
+        self.ready : bool = False
+        self.color : str = ""
+        self.name : str = ""
 
     def recordInputDir(self) -> p.Vector2:
         keys = p.key.get_pressed()
