@@ -10,7 +10,7 @@ try:
     IP = str(sys.argv[1])
     PORT = int(sys.argv[2])
 except:
-    IP = '176.169.188.110'
+    IP = '192.168.230.222'
     PORT = 12345
 
 print('trying to connect to server')
@@ -40,6 +40,8 @@ hitSound = p.mixer.Sound('assets/hit.mp3')
 deathSound.set_volume(1)
 shootSound.set_volume(0.05)
 hitSound.set_volume(0.5)
+redwall = p.image.load('assets/redwall.jpg')
+bluewall = p.image.load('assets/bluewall.jpg')
 
 clock = p.time.Clock()
 debugMode = False
@@ -68,7 +70,11 @@ otherPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
 def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):
     WIN.blit(bg,(0,0))
     for wall in map:
-        p.draw.rect(WIN, wall['color'], wall['rect'])
+        if wall['color'] == red :
+            WIN.blit(redwall,wall['rect'])
+        elif wall['color'] == blue :
+            WIN.blit(bluewall,wall['rect'])
+            
     WIN.blit(localPlayerSprite,localPlayer.rect)
     WIN.blits([(otherPlayerSprite,player.rect) for player in OtherPlayers])
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
