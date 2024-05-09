@@ -52,10 +52,10 @@ WIN.blit(checkSprite,(335,505))
 
 
 
-def main():
+def main(ip, port, name = ''):
     try:
-        IP = str(sys.argv[1])
-        PORT = int(sys.argv[2])
+        IP = str(ip)
+        PORT = int(port)
     except:
         IP = '176.169.188.110'
         PORT = 12345
@@ -70,7 +70,7 @@ def main():
     while waiting:
 
         server.recv(1)
-        
+
         for event in p.event.get() :
             if event.type == p.QUIT :
                 run = False
@@ -105,11 +105,11 @@ def main():
                         readybuton = p.image.load('assets/ready.png')
                         WIN.blit(readybuton,(785,650))
                         p.display.update()
-                    server.send(pickle.dumps({'color' : color_selected,'ready' : True}))
                 
                 if ready:
                     print("waiting for other players...")
-                
+        
+        server.send(b'1' if ready else b'0')
         p.display.update()
 
     return server

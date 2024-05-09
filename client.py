@@ -5,12 +5,12 @@ import pickle
 from player import Player
 from bullet import Bullet 
 from time import time
-from homepage import main
+import homepage
 
 p.init()
 p.mixer.init()
 
-server = main()
+server = homepage.main(sys.argv[1],sys.argv[2],sys.argv[3])
 
 WIN = p.display.set_mode((500,500))
 WINw, WINh = WIN.get_size()
