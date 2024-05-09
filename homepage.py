@@ -3,6 +3,8 @@ import tkinter as tk
 from time import time
 import socket
 import player as Player
+import pickle
+import sys
 
 p.init()
 
@@ -67,8 +69,9 @@ def main():
     waiting = True
     while waiting:
 
+        server.recv(1)
+        
         for event in p.event.get() :
-
             if event.type == p.QUIT :
                 run = False
                 break
@@ -106,10 +109,10 @@ def main():
                 
                 if ready:
                     print("waiting for other players...")
-                    
-                
                 
         p.display.update()
 
+    return server
+ 
 
 p.quit()

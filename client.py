@@ -10,7 +10,7 @@ from homepage import main
 p.init()
 p.mixer.init()
 
-main()
+server = main()
 
 WIN = p.display.set_mode((500,500))
 WINw, WINh = WIN.get_size()
