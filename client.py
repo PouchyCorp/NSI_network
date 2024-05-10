@@ -10,7 +10,16 @@ import homepage
 p.init()
 p.mixer.init()
 
-server = homepage.main(sys.argv[1],sys.argv[2],sys.argv[3])
+try :
+    ip = str(sys.argv[0])
+    port = int(sys.argv[1])
+    name = str(sys.argv[2])
+
+except:
+    ip = '127.0.0.1'
+    port = 12345
+    name = "Skibidi"
+server = homepage.main(ip,port,name)
 
 WIN = p.display.set_mode((500,500))
 WINw, WINh = WIN.get_size()
