@@ -42,7 +42,7 @@ clientList : dict[int, Client] = {}
 players : dict[int, Player] = {}
 bulletsPos : dict[int, tuple] = {}
 playerNum = 0
-debugMode = False
+debugMode = True
 
 waiting = True
 
@@ -52,11 +52,11 @@ def homepage_handeling_thread():
         for client in clientList.values():
             client.source.send(b'0')
             sleep(0.5)
-            readyStatus = clientList.recv(1)
+            readyStatus = client.source.recv(1)
             if readyStatus == b'1':
                 client.ready = True
 
-        readyToLaunchGame = True
+        readyToLaunchGame = False
         try:
             for client in clientList.values():
                 if client.ready == False:
@@ -66,12 +66,13 @@ def homepage_handeling_thread():
         
         if readyToLaunchGame:
             waiting = False
+        
+        if debugMode:print('waiting',waiting)
 
 def on_new_client(client,playerNum : int):
-
+    print(f"lauching player {playerNum}'s game")
     clock = pg.time.Clock()
-    print('player',playerNum,'connected')
-    
+
     #sending map to client
     client.send(pickle.dumps(unpickledMap))
 
@@ -139,14 +140,9 @@ while waiting :
     (sourceClient, addrClient) = server.accept()
     #if sourceClient not in clientList:
     clientList[playerNum] = Client(playerNum, sourceClient,addrClient)
+    print(f'player {playerNum} connected')
     playerNum+=1
-    '''ready = client.recv(2)
-    if ready["ready"]:
-        playerReady += 1
-    if playerReady == playerConnected:
-        client.send(pickle.dumps(players[playerNum]))
-        waiting = not waiting'''
-        
+
 for client in clientList.values():
         _thread.start_new_thread(on_new_client,(client.source, client.num))
         
