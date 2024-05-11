@@ -6,6 +6,34 @@ import player as Player
 import pickle
 import sys
 
+class Button:
+    def __init__(self, color, x, y):
+        self.color = color
+        self.clicked = False
+        self.x = x
+        self.y = y
+        self.width = 100
+        self.height = 100
+        self.rect = p.Rect(self.x,self.y,self.width,self.height)
+        self.color = color
+
+    def check_clicked(self) -> bool:
+        if p.mouse.get_pressed()[0] and self.rect.collidepoint(p.mouse.get_pos()[0],p.mouse.get_pos()[1]):
+            return self
+        else:
+            return None
+    
+    def draw(self, WIN : p.Surface, checkSprite, clicked_button):
+        if self == clicked_button:
+            p.draw.rect(WIN,self.color,self.rect)
+            WIN.blit(checkSprite,self.rect)
+        else:
+            p.draw.rect(WIN,self.color,self.rect)
+            
+
+
+
+
 def main(ip, port, name):
     p.init()
 
@@ -22,11 +50,13 @@ def main(ip, port, name):
     bg = p.image.load('assets/homepage.jpg')
     bg = p.transform.scale(bg,(WINw,WINh))
     WIN.blit(bg,(0,0))
-    readybuton = p.image.load('assets/ready.png')
-    WIN.blit(readybuton,(785,650))
-    readyButtonRect = readybuton.get_rect()
+    ready_button = p.image.load('assets/ready.png')
+    not_ready_button = p.image.load('assets/not_ready.png')
+    actual_ready_texture = not_ready_button
+    readyButtonRect = actual_ready_texture.get_rect()
+    readyButtonRect.x , readyButtonRect.y = 830, 780
     clicSound = p.mixer.Sound('assets/clic.mp3')
-    checkSprite = p.image.load('assets/check.png')
+    checkSprite = p.image.load('assets/Check3.png')
     playerFaceSprite = p.image.load('assets/playerFace.png')
     playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
     playerFaceSprite = p.transform.scale(playerFaceSprite,(100,100))
@@ -37,34 +67,18 @@ def main(ip, port, name):
     #the different butons to choose your color
 
     colors=["blue","red","green","yellow","pink","orange"]
-    color_selected = "blue"
+    color_selected = "red"
+    clicked_button = None
+    buttons : list[Button] = []
     ready = False
-
-    def draw():
-        WIN.blit(readybuton,readyButtonRect)
-
-    def drawbuton(color,x,y):
-        
-        playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
-        playerGreyScaleSprite = p.transform.scale(playerGreyScaleSprite,(100,100))
-        butoncolor = p.Surface(playerGreyScaleSprite.get_size()).convert_alpha()
-        butoncolor.fill(color)
-        playerGreyScaleSprite.blit(butoncolor, (0,0), special_flags = p.BLEND_RGBA_MULT)
-
-        
-        WIN.blit(playerGreyScaleSprite,(x,y))
-        
-        
-        WIN.blit(playerFaceSprite,(x,y))
-        p.display.update()
     
     for k in range(len(colors)):
-        drawbuton(colors[k],260*(k+1),500)
-    WIN.blit(checkSprite,(335,505))
+        buttons.append(Button(colors[k],260*(k+1),652))
     
     ready = False  
     waiting = True
-    while waiting:
+    run = True
+    while waiting and run:
 
         server.recv(1)
 
@@ -77,40 +91,29 @@ def main(ip, port, name):
                 mousePos = p.mouse.get_pos()
 
                 #if clicked on a colored rectangle
-                for k in range(len(colors)):
-                    if 260*(k+1) <= event.pos[0] <= (260*k+360) and 500 <= event.pos[1] <= 600:
-                        p.mixer.Sound.play(clicSound)
-                        color_selected = colors[k]
+                for button in buttons:
+                    if button.check_clicked() is not None:
+                        clicked_button = button.check_clicked() 
                         
-                        WIN.blit(checkSprite,((260*k+335),505))
-                        
-                        for j in range(len(colors)):
-                            if j != k:
-                                drawbuton(colors[j],260*(j+1),500)
-                        
-                #if clicked on the ready buton
-                if readyButtonRect.collidepoint(mousePos[0],mousePos[1]) and not ready:
-                    ready = True
-                    countdown = time()
+                #if clicked on the ready button
+                if readyButtonRect.collidepoint(mousePos[0],mousePos[1]):
+                    ready = not ready
                     p.mixer.Sound.play(clicSound)
+                    actual_ready_texture = ready_button if ready else not_ready_button
 
-                    while time() - countdown < 0.2 :
-                        readybuton = p.image.load('assets/ready_clicked.png')
-                        WIN.blit(readybuton,(785,650))
-                        p.display.update()
-                    while 0.2 < time() - countdown < 0.4 :
-                        readybuton = p.image.load('assets/ready.png')
-                        WIN.blit(readybuton,(785,650))
-                        p.display.update()
-                
-                if ready:
-                    print("waiting for other players...")
+                color_selected = clicked_button.color
         
-        server.send(b'0' if ready else b'0')
-        draw()
+        msg = ('1' if ready else '0')+'/'+color_selected
+        server.send(msg.encode())
+        WIN.blit(actual_ready_texture, readyButtonRect)
+        for button in buttons:
+            button.draw(WIN,checkSprite,clicked_button)
         p.display.update()
 
-    return server
+    if not run:
+        return
+    else:
+        return server 
  
 
 p.quit()

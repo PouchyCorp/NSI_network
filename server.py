@@ -52,8 +52,10 @@ def homepage_handeling_thread():
         for client in clientList.values():
             client.source.send(b'0')
             sleep(0.5)
-            readyStatus = client.source.recv(1)
-            if readyStatus == b'1':
+            clientStatusAgglo : str = client.source.recv(50).decode()
+            print(clientStatusAgglo.split('/'))
+            client.ready, client.playerColor = clientStatusAgglo.split('/') if clientStatusAgglo.split('/') else ['0', 'red']
+            if client.ready == '1':
                 client.ready = True
 
         readyToLaunchGame = False
@@ -67,7 +69,7 @@ def homepage_handeling_thread():
         if readyToLaunchGame:
             waiting = False
         
-        if debugMode:print('waiting',waiting)
+        #if debugMode:print('waiting',waiting)
 
 def on_new_client(client,playerNum : int):
     print(f"lauching player {playerNum}'s game")
