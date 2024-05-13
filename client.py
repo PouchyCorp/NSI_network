@@ -19,9 +19,10 @@ except:
     ip = '127.0.0.1'
     port = 12345
     name = "Skibidi"
+
 server = homepage.main(ip,port,name)
 
-WIN = p.display.set_mode((500,500))
+WIN = p.display.set_mode((0,0), p.FULLSCREEN)
 WINw, WINh = WIN.get_size()
 
 bg = p.image.load('assets/background.jpg')
@@ -84,6 +85,7 @@ def mainLoop():
     global run
     global debugMode
 
+    print('launching game')
     attackSpeed = 5
     attackSpeedTimer = 1
     map : list = pickle.loads(server.recv(2048))

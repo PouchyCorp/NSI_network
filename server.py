@@ -42,32 +42,54 @@ clientList : dict[int, Client] = {}
 players : dict[int, Player] = {}
 bulletsPos : dict[int, tuple] = {}
 playerNum = 0
-debugMode = True
+debugMode = False
 
 waiting = True
 
 def homepage_handeling_thread():
     global waiting
     while waiting:
-        for client in clientList.values():
+        asyncClientList = clientList.copy()
+        for client in asyncClientList.values():
             client.source.send(b'0')
+            if debugMode:print('clock signal sent')
+
             sleep(0.5)
-            clientStatusAgglo : str = client.source.recv(50).decode()
-            print(clientStatusAgglo.split('/'))
+
+            try :
+                clientStatusAgglo : str = client.source.recv(100).decode()
+            except:
+                print(f'client {client.num} crashed')
+                del asyncClientList[client.num]
+                continue
+            if debugMode:print(f'info recieved from client {client.num}: {clientStatusAgglo}')
             client.ready, client.playerColor = clientStatusAgglo.split('/') if clientStatusAgglo.split('/') else ['0', 'red']
+
             if client.ready == '1':
                 client.ready = True
+            else:
+                client.ready = False
+            print(client.ready)
+            
 
-        readyToLaunchGame = False
-        try:
+        if clientList:
+            readyToLaunchGame = True
             for client in clientList.values():
                 if client.ready == False:
                     readyToLaunchGame = False
-        except:
+        else:
             readyToLaunchGame = False
         
         if readyToLaunchGame:
             waiting = False
+            for client in clientList.values():
+                client.source.send(b'1')
+            if debugMode: print('attempting to launch game')
+        
+
+    print('waiting finished')
+    for client in clientList.values():
+            _thread.start_new_thread(on_new_client,(client.source, client.num))
         
         #if debugMode:print('waiting',waiting)
 
@@ -144,9 +166,6 @@ while waiting :
     clientList[playerNum] = Client(playerNum, sourceClient,addrClient)
     print(f'player {playerNum} connected')
     playerNum+=1
-
-for client in clientList.values():
-        _thread.start_new_thread(on_new_client,(client.source, client.num))
         
 
 pg.quit()

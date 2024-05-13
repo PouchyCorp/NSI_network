@@ -18,7 +18,7 @@ class Button:
         self.color = color
 
     def check_clicked(self) -> bool:
-        if p.mouse.get_pressed()[0] and self.rect.collidepoint(p.mouse.get_pos()[0],p.mouse.get_pos()[1]):
+        if self.rect.collidepoint(p.mouse.get_pos()[0],p.mouse.get_pos()[1]):
             return self
         else:
             return None
@@ -37,8 +37,8 @@ class Button:
 def main(ip, port, name):
     p.init()
 
-    IP = str(ip)
-    PORT = int(port)
+    IP = ip
+    PORT = port
 
     print(f'trying to connect to server with port : {PORT} and ip : {IP}')
     server = socket.socket()
@@ -80,7 +80,12 @@ def main(ip, port, name):
     run = True
     while waiting and run:
 
-        server.recv(1)
+        
+        if server.recv(1) == b'1':
+            waiting = False
+            break
+        else:
+            waiting = True
 
         for event in p.event.get() :
             if event.type == p.QUIT :
@@ -92,8 +97,10 @@ def main(ip, port, name):
 
                 #if clicked on a colored rectangle
                 for button in buttons:
-                    if button.check_clicked() is not None:
-                        clicked_button = button.check_clicked() 
+                    check_clicked = button.check_clicked()
+                    if check_clicked != None:
+                        clicked_button = check_clicked
+                        color_selected = clicked_button.color
                         
                 #if clicked on the ready button
                 if readyButtonRect.collidepoint(mousePos[0],mousePos[1]):
@@ -101,7 +108,6 @@ def main(ip, port, name):
                     p.mixer.Sound.play(clicSound)
                     actual_ready_texture = ready_button if ready else not_ready_button
 
-                color_selected = clicked_button.color
         
         msg = ('1' if ready else '0')+'/'+color_selected
         server.send(msg.encode())
@@ -114,6 +120,5 @@ def main(ip, port, name):
         return
     else:
         return server 
- 
-
+    
 p.quit()
