@@ -16,7 +16,7 @@ def snap(coor,r):
 
 def main():
     p.init()
-    WIN = p.display.set_mode((1920, 1080))
+    WIN = p.display.set_mode((0,0), p.FULLSCREEN)
     p.display.set_caption("TAGLIATELE Level Editor")
     grid = p.image.load('assets/background.jpg')
     WIDTH, HEIGHT = WIN.get_size()
@@ -51,7 +51,7 @@ def main():
     def draw():
         WIN.blit(grid,(0,0))
         x = 0
-        for i in range(50):
+        for i in range(108):
             p.draw.line(WIN,(10,10,10),(0+x,0),(0+x,WIDTH))
             x+=gridXSize
         x = 0
@@ -101,6 +101,10 @@ def main():
                     ghostSurface = p.Surface((abs(snappedMouseX-x1),abs(snappedMouseY-y1)))
                     ghostSurface.set_alpha(128)
                     ghostSurface.fill(color_fill)
+                    
+            if event.type == p.KEYDOWN :
+                if len(walls) != 0:
+                    del(walls[-1])
 
             
             draw()
