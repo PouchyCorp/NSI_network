@@ -102,6 +102,10 @@ def main():
                     ghostSurface.set_alpha(128)
                     ghostSurface.fill(color_fill)
 
+            if event.type == p.KEYDOWN :
+                if len(walls) != 0 :
+                    del(walls[-1])
+
             
             draw()
 
