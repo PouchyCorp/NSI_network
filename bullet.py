@@ -24,9 +24,9 @@ class Bullet():
         shieldsCollider = [shield[1] for shield in shields.values()]
         allColliders = colliders + shieldsCollider
         collisions = shadowRect.collidelistall(allColliders)
+        if not 1500 > self.rect.y > 0 or not 3000 > self.rect.x > 0:
+            self.lifeTime
         for collision in collisions:
-            if shadowRect.collidelistall(shieldsCollider):
-                print('pok')
             if self.lifeTime == 0:
                 return
             self.lifeTime -= 1

@@ -137,7 +137,7 @@ def mainLoop():
         if debugMode:print('data sent to server')
 
         #recieve data
-        freshData = server.recv(4056)        
+        freshData = server.recv(10000)        
         OtherPlayers : list[Player] = []
         #check if blank message sign
         if freshData != b'0':

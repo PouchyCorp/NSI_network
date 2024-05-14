@@ -45,7 +45,7 @@ def main(ip, port, name):
     server.connect((IP, PORT))
     print('connected')
 
-    WIN = p.display.set_mode((1920,1080))
+    WIN = p.display.set_mode((0,0), p.FULLSREEN)
     WINw, WINh = WIN.get_size()
     bg = p.image.load('assets/homepage.jpg')
     bg = p.transform.scale(bg,(WINw,WINh))
