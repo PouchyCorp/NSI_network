@@ -8,16 +8,16 @@ from time import sleep
 
 try:
     if False:
-        MapName = 'Maps\\'+str(argv[1])+'.pkl'
+        MapName = 'Maps/'+str(argv[1])+'.pkl'
     else:
         #override for tests
-        MapName = 'Maps\\blockyMap.pkl'
+        MapName = 'Maps/blockyMap.pkl'
         
     with open(MapName,'rb') as map:
         unpickledMap = pickle.load(map)
     print('loading '+MapName+' as map')
 except:
-    MapName = 'DO_NOT_DELETE.pkl'
+    MapName = 'Maps/DO_NOT_DELETE.pkl'
     print('loading blank map')
     with open(MapName,'rb') as map:
         unpickledMap = pickle.load(map)
