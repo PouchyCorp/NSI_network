@@ -119,6 +119,6 @@ def main(ip, port, name):
     if not run:
         return
     else:
-        return server 
+        return server, color_selected
     
 p.quit()

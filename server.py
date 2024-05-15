@@ -89,11 +89,11 @@ def homepage_handeling_thread():
 
     print('waiting finished')
     for client in clientList.values():
-            _thread.start_new_thread(on_new_client,(client.source, client.num))
+            _thread.start_new_thread(on_new_client,(client.source, client.num, client.playerColor))
         
         #if debugMode:print('waiting',waiting)
 
-def on_new_client(client,playerNum : int):
+def on_new_client(client,playerNum : int, color):
     print(f"lauching player {playerNum}'s game")
     clock = pg.time.Clock()
 
@@ -103,7 +103,7 @@ def on_new_client(client,playerNum : int):
     #client confirmation because client don't catch player data if else
     client.recv(1)
     #sending starting player class
-    players[playerNum] = Player(50, 50, playerNum)
+    players[playerNum] = Player(50, 50, playerNum, color)
     client.send(pickle.dumps(players[playerNum]))
     
     while True:

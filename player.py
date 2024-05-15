@@ -1,7 +1,7 @@
 import pygame as p
 from bullet import Bullet
 class Player():
-    def __init__(self,x,y,num):
+    def __init__(self,x,y,num, color):
         self.x = x
         self.y = y
         self.w = 50
@@ -10,7 +10,7 @@ class Player():
         self.hp = 10
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
         self.dir : p.Vector2 = p.Vector2(0,0)
-        self.speed = 6
+        self.speed = 4
         self.mouseDir = p.Vector2(0,0)
         self.pos = (self.x,self.y)
         self.shootedBullets : list[Bullet] = []
@@ -18,7 +18,7 @@ class Player():
         self.dead : bool = False
         self.hitSomeone : list[Player] = []
         self.ready : bool = False
-        self.color : str = ""
+        self.color : str = color
         self.name : str = ""
 
     def recordInputDir(self) -> p.Vector2:

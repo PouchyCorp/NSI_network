@@ -14,13 +14,12 @@ try :
     ip = str(sys.argv[0])
     port = int(sys.argv[1])
     name = str(sys.argv[2])
-
 except:
     ip = '127.0.0.1'
     port = 12345
     name = "Skibidi"
 
-server = homepage.main(ip,port,name)
+server, color = homepage.main(ip,port,name)
 
 WIN = p.display.set_mode((0,0), p.FULLSCREEN)
 WINw, WINh = WIN.get_size()
@@ -63,15 +62,14 @@ def setPlayerSprite(surface, color):
     return newSurf
 
 #dynamic player sprite
-localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,(255,0,0))
-otherPlayerSprite = setPlayerSprite(playerGreyScaleSprite,'red')
+localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,color)
 
 def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):
     WIN.blit(bg,(0,0))
     for wall in map:
         p.draw.rect(WIN, wall['color'], wall['rect'])
     WIN.blit(localPlayerSprite,localPlayer.rect)
-    WIN.blits([(otherPlayerSprite,player.rect) for player in OtherPlayers])
+    WIN.blits([(setPlayerSprite(playerGreyScaleSprite,player.color),player.rect) for player in OtherPlayers])
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
     WIN.blits([(bulletSprite,bullet) for bullet in otherBulletsPos])
     WIN.blits([(rotatedGunSprite,guns[rotatedGunSprite]) for rotatedGunSprite in guns])
@@ -113,7 +111,7 @@ def mainLoop():
             if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
                 p.mixer.Sound.play(shootSound)
                 attackSpeedTimer = 0
-                spawnDistFromPlayer = localPlayer.mouseDir.copy()
+                spawnDistFromPlayer = localPlayer.mouseDir.copy()*1.5
                 spawnDistFromPlayer.scale_to_length(20)
                 bulletSpawnPoint = (int(localPlayer.rect.centerx+spawnDistFromPlayer.x),int(localPlayer.rect.centery+spawnDistFromPlayer.y))
 
