@@ -24,8 +24,10 @@ class Bullet():
         shieldsCollider = [shield[1] for shield in shields.values()]
         allColliders = colliders + shieldsCollider
         collisions = shadowRect.collidelistall(allColliders)
+        
         if not 1500 > self.rect.y > 0 or not 3000 > self.rect.x > 0:
-            self.lifeTime
+            self.lifeTime = 0
+
         for collision in collisions:
             if self.lifeTime == 0:
                 return
