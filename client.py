@@ -13,13 +13,10 @@ p.mixer.init()
 try :
     ip = str(sys.argv[0])
     port = int(sys.argv[1])
-    name = str(sys.argv[2])
 except:
     ip = '127.0.0.1'
     port = 12345
-    name = "Skibidi"
-
-server, color = homepage.main(ip,port,name)
+server, color = homepage.main(ip,port)
 
 WIN = p.display.set_mode((0,0), p.FULLSCREEN)
 WINw, WINh = WIN.get_size()
