@@ -106,7 +106,8 @@ def on_new_client(client,playerNum : int, color):
     players[playerNum] = Player(50, 50, playerNum, color)
     client.send(pickle.dumps(players[playerNum]))
     
-    while True:
+    run = True
+    while run:
         clock.tick(60)
         
         #recieve data from player
@@ -148,15 +149,31 @@ def on_new_client(client,playerNum : int, color):
             for bullet in bulletList:
                 bulletsPosWithoutSelfList.append(bullet)
 
+        #check if a player won
+        flag = None
+        gameOverStatusCounter = 0
+        for player in players.values():
+            if player.dead == True:
+                gameOverStatusCounter +=1
+        if gameOverStatusCounter >= len(players.values())-1:
+            flag = 'GameOver'
+            run = False
+
         #send other players data if they exist
         if playersWithoutSelf:
-            client.send(pickle.dumps({'players' : playersWithoutSelf,
+            client.send(pickle.dumps({'flags' : flag,
+                                    'players' : playersWithoutSelf,
                                     'bullets' :bulletsPosWithoutSelfList}))
             if debugMode:print('data sent to',playerNum)
         else:
             #if no, send blank message sign
             client.send(b'0')
             if debugMode:print('sending blank to',playerNum)
+            
+    if flag == 'GameOver':
+        _thread.start_new_thread(homepage_handeling_thread,())
+    
+        
         
 
 _thread.start_new_thread(homepage_handeling_thread,())

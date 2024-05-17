@@ -34,7 +34,7 @@ class Button:
 
 
 
-def main(ip, port):
+def main(ip, port, name):
     p.init()
 
     IP = ip

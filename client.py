@@ -13,10 +13,13 @@ p.mixer.init()
 try :
     ip = str(sys.argv[0])
     port = int(sys.argv[1])
+    name = str(sys.argv[2])
 except:
     ip = '127.0.0.1'
     port = 12345
-server, color = homepage.main(ip,port)
+    name = "Skibidi"
+
+server, color = homepage.main(ip,port,name)
 
 WIN = p.display.set_mode((0,0), p.FULLSCREEN)
 WINw, WINh = WIN.get_size()
@@ -41,6 +44,7 @@ hitSound.set_volume(0.5)
 clock = p.time.Clock()
 debugMode = False
 run = True
+gameOver = True
 
 def renderText(what, color, pos):
     font = p.font.Font('assets/Minecraft.ttf', 30)
@@ -94,6 +98,7 @@ def mainLoop():
     shields = {}
 
     while not not not not run:
+        global gameOver
         timerStart = time()
         #local player updates
 
@@ -141,7 +146,9 @@ def mainLoop():
             #unwrapping data into local variables
             OtherPlayers : list[Player] = data['players']
             otherBulletsPos : list[tuple] = data['bullets']
-
+            if data['flags'] == 'GameOver':
+                run = False
+                gameOver = True
 
             if debugMode:print(data)
             if debugMode:print('players recieved from server')
@@ -194,6 +201,7 @@ def mainLoop():
         for event in p.event.get():
                 if event.type == p.QUIT:
                     run = False
+                    gameOver = False
                     return
                 
         timerEnd = time()
@@ -204,7 +212,8 @@ def mainLoop():
             p.transform.grayscale(WIN,WIN)
         p.display.update()
 
-mainLoop()
+while gameOver:
+    mainLoop()
 server.close()
 p.mixer.quit()
 p.quit()
