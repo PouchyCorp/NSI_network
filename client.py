@@ -78,6 +78,7 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     #    p.draw.rect(WIN,'green',shield_[1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0), 30)
+    renderText('pseudo',color,(localPlayer.rect[0],localPlayer.rect[1]-15), 15)
     #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
 
 def mainLoop():
