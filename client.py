@@ -16,6 +16,10 @@ try :
 except:
     ip = '127.0.0.1'
     port = 12345
+
+p.mixer.music.load('assets/Musique_Nsi.wav')
+p.mixer.music.play(-1)
+
 server, color = homepage.main(ip,port)
 
 WIN = p.display.set_mode((0,0), p.FULLSCREEN)
