@@ -66,7 +66,7 @@ def main(ip, port):
                                             
     #the different butons to choose your color
 
-    colors=["blue","red","green","yellow","pink","orange"]
+    colors=["blue","red","green","yellow","fuchsia","orange"]
     color_selected = "red"
     clicked_button = None
     buttons : list[Button] = []
