@@ -21,7 +21,7 @@ except:
 try :
     name = str(sys.argv[3])
 except :
-    name = ''
+    name = 'anon'
 
 p.mixer.music.load('assets/Musique_Nsi.wav')
 p.mixer.music.play(-1)
@@ -112,14 +112,14 @@ def mainLoop():
             localPlayer.dir = localPlayer.recordInputDir()
             localPlayer.move(localPlayer.dir,map)
 
-            localPlayer.updateValues()
+            localPlayer.updateValues(name)
 
             #attack speed logic
             attackSpeedTimer += attackSpeed/60
             if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
                 p.mixer.Sound.play(shootSound)
                 attackSpeedTimer = 0
-                spawnDistFromPlayer = localPlayer.mouseDir.copy()*1.5
+                spawnDistFromPlayer = localPlayer.mouseDir.copy()*10
                 spawnDistFromPlayer.scale_to_length(20)
                 bulletSpawnPoint = (int(localPlayer.rect.centerx+spawnDistFromPlayer.x),int(localPlayer.rect.centery+spawnDistFromPlayer.y))
 
@@ -147,12 +147,25 @@ def mainLoop():
         OtherPlayers : list[Player] = []
         #check if blank message sign
         if freshData != b'0':
+            if freshData == b'1':
+                print('game over')
+                renderText(f"NOBODY WON !",'white',(500,300),100)
+                while True:
+                    p.display.update()
+                    pass
+
             data : dict = pickle.loads(freshData)
             
             #unwrapping data into local variables
             OtherPlayers : list[Player] = data['players']
             otherBulletsPos : list[tuple] = data['bullets']
 
+            if data['flag']:
+                print('game over')
+                renderText(f"{data['flag']} WON !",'white',(500,300),100)
+                while True:
+                    p.display.update()
+                    pass
 
             if debugMode:print(data)
             if debugMode:print('players recieved from server')
@@ -177,7 +190,7 @@ def mainLoop():
                 if player.num == localPlayer.num:
                     localPlayer.dead = True
                     localPlayer.rect.x, localPlayer.rect.y= 10000,10000
-                    localPlayer.updateValues()
+                    localPlayer.updateValues(name)
 
         #gun sprite
         guns : dict[p.Surface,p.Rect] = {}
@@ -209,7 +222,7 @@ def mainLoop():
                 
         timerEnd = time()
         timerFluctuation = round((timerEnd-timerStart)/(1/60),2)
-        renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,100), 10)
+        renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,40), 10)
         
         if localPlayer.dead:
             p.transform.grayscale(WIN,WIN)

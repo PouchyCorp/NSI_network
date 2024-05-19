@@ -67,10 +67,10 @@ class Player():
         
         
 
-    def updateValues(self):
+    def updateValues(self,name):
         self.x, self.y = (self.rect.x,self.rect.y)
         self.pos = (self.rect.x,self.rect.y)
-
+        self.name  = name 
         #
         self.mouseDir = p.math.Vector2(p.mouse.get_pos()[0]- self.rect.centerx,
                                         p.mouse.get_pos()[1] - self.rect.centery)
