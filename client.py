@@ -46,8 +46,8 @@ clock = p.time.Clock()
 debugMode = False
 run = True
 
-def renderText(what, color, pos):
-    font = p.font.Font('assets/Minecraft.ttf', 30)
+def renderText(what, color, pos, size):
+    font = p.font.Font('assets/Minecraft.ttf', size)
     text = font.render(what, True, p.Color(color))
     WIN.blit(text, pos)
 
@@ -77,7 +77,7 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     #for shield_ in shield.values():
     #    p.draw.rect(WIN,'green',shield_[1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
-    renderText(str(localPlayer.hp),'red',(0,0))
+    renderText(str(localPlayer.hp),'red',(0,0), 30)
     #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
 
 def mainLoop():
@@ -202,7 +202,7 @@ def mainLoop():
                 
         timerEnd = time()
         timerFluctuation = round((timerEnd-timerStart)/(1/60),2)
-        renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,100))
+        renderText('fps fluctuation :'+str(timerFluctuation),'white',(0,100), 10)
         
         if localPlayer.dead:
             p.transform.grayscale(WIN,WIN)
