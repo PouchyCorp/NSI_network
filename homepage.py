@@ -54,7 +54,7 @@ def main(ip, port):
     not_ready_button = p.image.load('assets/not_ready.png')
     actual_ready_texture = not_ready_button
     readyButtonRect = actual_ready_texture.get_rect()
-    readyButtonRect.x , readyButtonRect.y = 830, 780
+    readyButtonRect.x , readyButtonRect.y = 830, 900
     clicSound = p.mixer.Sound('assets/clic.mp3')
     checkSprite = p.image.load('assets/Check3.png')
     playerFaceSprite = p.image.load('assets/playerFace.png')
@@ -73,7 +73,7 @@ def main(ip, port):
     ready = False
     
     for k in range(len(colors)):
-        buttons.append(Button(colors[k],260*(k+1),652))
+        buttons.append(Button(colors[k],260*(k+1),701))
     
     ready = False  
     waiting = True
