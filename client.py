@@ -11,11 +11,17 @@ p.init()
 p.mixer.init()
 
 try :
-    ip = str(sys.argv[0])
-    port = int(sys.argv[1])
+    ip = str(sys.argv[1])
+    port = int(sys.argv[2])
+    
 except:
     ip = '127.0.0.1'
     port = 12345
+    
+try :
+    name = str(sys.argv[3])
+except :
+    name = ''
 
 p.mixer.music.load('assets/Musique_Nsi.wav')
 p.mixer.music.play(-1)
@@ -78,7 +84,7 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     #    p.draw.rect(WIN,'green',shield_[1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
     renderText(str(localPlayer.hp),'red',(0,0), 30)
-    renderText('pseudo',color,(localPlayer.rect[0],localPlayer.rect[1]-15), 15)
+    renderText(name,color,(localPlayer.rect[0],localPlayer.rect[1]-15), 15)
     #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
 
 def mainLoop():
