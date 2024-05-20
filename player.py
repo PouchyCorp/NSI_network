@@ -20,6 +20,7 @@ class Player():
         self.ready : bool = False
         self.color : str = color
         self.name : str = ""
+        self.otherHandPos = (self.x,self.y)
 
     def recordInputDir(self) -> p.Vector2:
         keys = p.key.get_pressed()

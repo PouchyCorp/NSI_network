@@ -151,7 +151,7 @@ def on_new_client(client,playerNum : int, color):
         flag = ''
         gameOverStatusCounter = list(filter(lambda p: p.dead,players.values()))
         if len(gameOverStatusCounter) >= len(players.values())-1 and len(players.values()) != 1:
-            flag = [p for p in players.values() if p not in gameOverStatusCounter][0]
+            flag = [p for p in players.values() if p not in gameOverStatusCounter][0].name
             run = False
             print('game over')
         elif len(gameOverStatusCounter) == len(players.values()): 
