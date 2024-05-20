@@ -25,13 +25,13 @@ class Player():
     def recordInputDir(self) -> p.Vector2:
         keys = p.key.get_pressed()
         vector = p.Vector2(0,0)
-        if keys[p.K_LEFT]:
+        if keys[p.K_LEFT] or keys[p.K_q] or keys[p.K_a]:
             vector += (-self.speed,0)
-        if keys[p.K_RIGHT]:
+        if keys[p.K_RIGHT] or keys[p.K_d]:
             vector += (self.speed,0)
-        if keys[p.K_DOWN]:
+        if keys[p.K_DOWN] or keys[p.K_s]:
             vector += (0,self.speed)
-        if keys[p.K_UP]:
+        if keys[p.K_UP] or keys[p.K_z] or keys[p.K_w]:
             vector += (0,-self.speed)
         return vector
 

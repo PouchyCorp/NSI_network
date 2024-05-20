@@ -93,7 +93,7 @@ def mainLoop():
     global debugMode
 
     print('launching game')
-    attackSpeed = 5
+    attackSpeed = 3
     attackSpeedTimer = 1
     map : list = pickle.loads(server.recv(2048))
     print('map loaded')

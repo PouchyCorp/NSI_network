@@ -53,9 +53,6 @@ def homepage_handeling_thread():
         for client in asyncClientList.values():
             client.source.send(b'0')
             if debugMode:print('clock signal sent')
-
-            sleep(0.5)
-
             try :
                 clientStatusAgglo : str = client.source.recv(100).decode()
             except:
