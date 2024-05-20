@@ -40,7 +40,7 @@ playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
 #playerGreyScaleSprite.set_alpha(100)
 gunSprite = p.transform.flip(gunSprite,True,False)
 shieldSprite = p.image.load('assets/side_shield.png')
-shieldSprite = p.transform.scale_by(shieldSprite,2)
+shieldSprite = p.transform.scale_by(shieldSprite,1.8)
 deathSound = p.mixer.Sound('assets/death.mp3')
 shootSound = p.mixer.Sound('assets/shoot.mp3')
 hitSound = p.mixer.Sound('assets/hit.mp3')
@@ -96,7 +96,6 @@ def mainLoop():
     attackSpeed = 5
     attackSpeedTimer = 1
     map : list = pickle.loads(server.recv(2048))
-    mapColliders = [wall['rect'] for wall in map]
     print('map loaded')
     server.send(b'0')
     localPlayer : Player = pickle.loads(server.recv(2048))
@@ -120,7 +119,7 @@ def mainLoop():
             if attackSpeedTimer >= 1 and p.mouse.get_pressed()[0]:
                 p.mixer.Sound.play(shootSound)
                 attackSpeedTimer = 0
-                spawnDistFromPlayer = localPlayer.mouseDir.copy()*10
+                spawnDistFromPlayer = localPlayer.mouseDir.copy()
                 spawnDistFromPlayer.scale_to_length(20)
                 bulletSpawnPoint = (int(localPlayer.rect.centerx+spawnDistFromPlayer.x),int(localPlayer.rect.centery+spawnDistFromPlayer.y))
 
@@ -129,7 +128,7 @@ def mainLoop():
 
         #local bullet updates
         for bullet in localBullets:
-            bullet.move(mapColliders,shields)
+            bullet.move(map,shields)
             bullet.updateValues()
             if bullet.lifeTime <= 0:
                 localBullets.pop(localBullets.index(bullet))
@@ -150,11 +149,14 @@ def mainLoop():
         if freshData != b'0':
             if freshData == b'1':
                 print('game over')
-                renderText(f"NOBODY WON !",'white',(500,300),100)
+                renderText(f"NOBODY WON !",'white',(450,300),100)
+                renderText(f"press escape to quit",'black',(450,400),50)
                 p.display.update()
                 while True:
-                    p.event.get()
-                    pass
+                    for event in p.event.get():
+                        if event.type == p.QUIT or p.key.get_pressed()[p.K_ESCAPE]:
+                            run = False
+                            return
 
             data : dict = pickle.loads(freshData)
             
@@ -164,10 +166,14 @@ def mainLoop():
 
             if data['flag']:
                 print('game over')
-                renderText(f"{data['flag']} WON !",'white',(500,300),100)
+                renderText(f"{data['flag']} WON !",'white',(450,300),100)
+                renderText(f"press escape to quit",'black',(450,400),50)
                 p.display.update()
-                while True:
-                    p.event.get()
+                while True :
+                    for event in p.event.get():
+                        if event.type == p.QUIT or p.key.get_pressed()[p.K_ESCAPE]:
+                            run = False
+                            return
 
             if debugMode:print(data)
             if debugMode:print('players recieved from server')

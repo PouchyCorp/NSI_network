@@ -41,12 +41,7 @@ class Player():
             shadowRect.move_ip(dir)
             colliders = [wall['rect'] for wall in map]
             collisions = shadowRect.collidelistall(colliders)
-            inBlue = True
-            for coll in collisions:
-                if map[coll]['color'] != 'blue':
-                    inBlue = False
-                    break
-            if collisions and not inBlue:
+            if collisions:
                 #all that to 'glide' when moving in diagonal on a wall
                 if dir.x == 0 or dir.y == 0:
                     return

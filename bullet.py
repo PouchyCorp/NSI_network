@@ -18,11 +18,12 @@ class Bullet():
         self.noCollisionTime -= 1
     
 
-    def move(self, colliders, shields):
+    def move(self, map, shields):
         shadowRect = self.rect.copy()
         shadowRect.move_ip(self.dir)
         shieldsCollider = [shield[1] for shield in shields.values()]
-        allColliders = colliders + shieldsCollider
+        mapCollidersExeptBlue = [wall['rect'] for wall in map if wall['color'] != 'blue']
+        allColliders = mapCollidersExeptBlue + shieldsCollider
         collisions = shadowRect.collidelistall(allColliders)
         
         if not 1500 > self.rect.y > 0 or not 3000 > self.rect.x > 0:
