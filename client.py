@@ -151,8 +151,9 @@ def mainLoop():
             if freshData == b'1':
                 print('game over')
                 renderText(f"NOBODY WON !",'white',(500,300),100)
+                p.display.update()
                 while True:
-                    p.display.update()
+                    p.event.get()
                     pass
 
             data : dict = pickle.loads(freshData)
@@ -164,9 +165,9 @@ def mainLoop():
             if data['flag']:
                 print('game over')
                 renderText(f"{data['flag']} WON !",'white',(500,300),100)
+                p.display.update()
                 while True:
-                    p.display.update()
-                    pass
+                    p.event.get()
 
             if debugMode:print(data)
             if debugMode:print('players recieved from server')

@@ -11,7 +11,10 @@ def save():
 
 def snap(coor,r):
     if coor % r != 0:
-        coor -= coor % r
+        if coor % r < r/2:
+            coor -= coor % r
+        else:
+            coor += (r - (coor % r))
     return int(coor)
 
 def main():
@@ -51,7 +54,7 @@ def main():
     def draw():
         WIN.blit(grid,(0,0))
         x = 0
-        for i in range(50):
+        for i in range(100):
             p.draw.line(WIN,(10,10,10),(0+x,0),(0+x,WIDTH))
             x+=gridXSize
         x = 0
