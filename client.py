@@ -15,7 +15,7 @@ try :
     port = int(sys.argv[2])
     
 except:
-    ip = '127.0.0.1'
+    ip = '192.168.230.222'
     port = 12345
     
 try :
@@ -37,6 +37,9 @@ bulletSprite = p.image.load('assets/bullet.png')
 gunSprite = p.image.load('assets/gun.png')
 playerFaceSprite = p.image.load('assets/playerFace.png')
 playerGreyScaleSprite = p.image.load('assets/playerGreyScale.png')
+redwall = p.image.load('assets/redwall.jpg')
+bluewall = p.image.load('assets/bluewall.jpg')
+
 #playerGreyScaleSprite.set_alpha(100)
 gunSprite = p.transform.flip(gunSprite,True,False)
 shieldSprite = p.image.load('assets/side_shield.png')
@@ -74,7 +77,10 @@ localPlayerSprite = setPlayerSprite(playerGreyScaleSprite,color)
 def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns,shield):
     WIN.blit(bg,(0,0))
     for wall in map:
-        p.draw.rect(WIN, wall['color'], wall['rect'])
+        if wall['color'] == 'red':
+            WIN.blit(redwall, wall['rect'], wall['rect'])
+        else:
+            WIN.blit(bluewall, wall['rect'], wall['rect'])
     WIN.blit(localPlayerSprite,localPlayer.rect)
     WIN.blits([(setPlayerSprite(playerGreyScaleSprite,player.color),player.rect) for player in OtherPlayers])
     WIN.blits([(bulletSprite,bullet.rect) for bullet in localBullets])
