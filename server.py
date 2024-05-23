@@ -171,7 +171,6 @@ def on_new_client(client,playerNum : int, color):
 _thread.start_new_thread(homepage_handeling_thread,())
 while waiting :
     (sourceClient, addrClient) = server.accept()
-    #if sourceClient not in clientList:
     clientList[playerNum] = Client(playerNum, sourceClient,addrClient)
     print(f'player {playerNum} connected')
     playerNum+=1
