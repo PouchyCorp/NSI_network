@@ -1,5 +1,4 @@
 import sys
-import socket
 import pygame as p
 import pickle
 from player import Player
@@ -89,7 +88,7 @@ def draw(localPlayer : Player,OtherPlayers,localBullets,otherBulletsPos,map,guns
     #for shield_ in shield.values():
     #    p.draw.rect(WIN,'green',shield_[1])
     WIN.blits([(rotatedShield[0],rotatedShield[1]) for rotatedShield in shield.values()])
-    renderText(str(localPlayer.hp),'red',(0,0), 30)
+    renderText(str(localPlayer.hp),'red',(0,0), 60)
     renderText(localPlayer.name,color,(localPlayer.rect[0],localPlayer.rect[1]-15), 15)
     [renderText(player.name,player.color,(player.rect[0],player.rect[1]-15), 15) for player in OtherPlayers]
     #p.draw.line(WIN,'blue',localPlayer.rect.center, localPlayer.otherHandPos)
@@ -99,7 +98,7 @@ def mainLoop():
     global debugMode
 
     print('launching game')
-    attackSpeed = 3
+    attackSpeed = 1.5
     attackSpeedTimer = 1
     map : list = pickle.loads(server.recv(2048))
     print('map loaded')

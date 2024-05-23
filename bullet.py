@@ -9,7 +9,7 @@ class Bullet():
         self.speed = 8
         self.pos = (self.x,self.y)
         self.rect : p.Rect = p.Rect(self.x,self.y,self.w,self.h)
-        self.lifeTime = 20
+        self.lifeTime = 4
         self.noCollisionTime = 8
         
     def updateValues(self):
